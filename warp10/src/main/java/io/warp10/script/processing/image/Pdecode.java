@@ -27,6 +27,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 
 import org.apache.commons.codec.binary.Base64;
+import processing.core.PConstants;
 import processing.core.PImage;
 
 /**
@@ -44,7 +45,7 @@ public class Pdecode extends NamedWarpScriptFunction implements WarpScriptStackF
     
     byte[] bytes;
     if ((top instanceof String) && ((String) top).startsWith("data:image/")) {
-      bytes = Base64.decodeBase64(((String) top).substring(((String) top).indexOf(",") + 1));
+      bytes = Base64.decodeBase64(((String) top).substring(((String) top).indexOf(',') + 1));
     } else if (top instanceof byte[]) {
       bytes = (byte[]) top;
     } else {
@@ -65,7 +66,7 @@ public class Pdecode extends NamedWarpScriptFunction implements WarpScriptStackF
     
     //The transparency test in processing lib is not working correctly: set format to ARGB is mandatory to keep transparency.
     // setting it on Jpeg or non transparent image has no impact, so it is better to set it by default, as every PGraphics objects.
-    image.format = PImage.ARGB;
+    image.format = PConstants.ARGB;
     
     stack.push(image);
     

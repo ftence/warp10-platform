@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -47,9 +48,9 @@ public class PendShape extends NamedWarpScriptFunction implements WarpScriptStac
     } else if (2 == params.size()) {
       String mode = params.get(1).toString();
       if ("OPEN".equals(mode)) {
-        pg.endShape(PGraphics.OPEN);
+        pg.endShape(PConstants.OPEN);
       } else if ("CLOSE".equals(mode)) {
-        pg.endShape(PGraphics.CLOSE);
+        pg.endShape(PConstants.CLOSE);
       } else {
         throw new WarpScriptException(getName() + ": invalid mode, should be 'OPEN' or 'CLOSE'.");
       }

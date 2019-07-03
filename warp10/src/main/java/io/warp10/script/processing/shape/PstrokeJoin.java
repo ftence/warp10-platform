@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,11 +46,11 @@ public class PstrokeJoin extends NamedWarpScriptFunction implements WarpScriptSt
     String mode = params.get(1).toString();
     
     if ("MITER".equals(mode)) {
-      pg.strokeJoin(PGraphics.MITER);      
+      pg.strokeJoin(PConstants.MITER);
     } else if ("BEVEL".equals(mode)) {
-      pg.strokeJoin(PGraphics.BEVEL);
+      pg.strokeJoin(PConstants.BEVEL);
     } else if ("ROUND".equals(mode)) {
-      pg.strokeJoin(PGraphics.ROUND);
+      pg.strokeJoin(PConstants.ROUND);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'MITER', 'BEVEL' or 'ROUND'.");
     }

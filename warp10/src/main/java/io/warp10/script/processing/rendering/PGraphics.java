@@ -25,6 +25,7 @@ import java.awt.image.BufferedImage;
 
 import processing.awt.PGraphicsJava2D;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.opengl.PGraphics3D;
 
 /**
@@ -83,7 +84,7 @@ public class PGraphics extends NamedWarpScriptFunction implements WarpScriptStac
     }
 
     // Disable async saving of frame in case we want to save a frame to a file
-    pg.hint(processing.core.PGraphics.DISABLE_ASYNC_SAVEFRAME);
+    pg.hint(PConstants.DISABLE_ASYNC_SAVEFRAME);
     
     // Declare a PApplet as parent so we can create fonts for example
     PApplet pa = new PApplet();

@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,25 +46,25 @@ public class PblendMode extends NamedWarpScriptFunction implements WarpScriptSta
     String mode = params.get(1).toString();
     
     if ("BLEND".equals(mode)) {
-      pg.blendMode(PGraphics.BLEND);      
+      pg.blendMode(PConstants.BLEND);
     } else if ("ADD".equals(mode)) {
-      pg.blendMode(PGraphics.ADD);
+      pg.blendMode(PConstants.ADD);
     } else if ("SUBTRACT".equals(mode)) {
-      pg.blendMode(PGraphics.SUBTRACT);
+      pg.blendMode(PConstants.SUBTRACT);
     } else if ("DARKEST".equals(mode)) {
-      pg.blendMode(PGraphics.DARKEST);
+      pg.blendMode(PConstants.DARKEST);
     } else if ("LIGHTEST".equals(mode)) {
-      pg.blendMode(PGraphics.LIGHTEST);
+      pg.blendMode(PConstants.LIGHTEST);
     } else if ("DIFFERENCE".equals(mode)) {
-      pg.blendMode(PGraphics.DIFFERENCE);
+      pg.blendMode(PConstants.DIFFERENCE);
     } else if ("EXCLUSION".equals(mode)) {
-      pg.blendMode(PGraphics.EXCLUSION);
+      pg.blendMode(PConstants.EXCLUSION);
     } else if ("MULTIPLY".equals(mode)) {
-      pg.blendMode(PGraphics.MULTIPLY);
+      pg.blendMode(PConstants.MULTIPLY);
     } else if ("SCREEN".equals(mode)) {
-      pg.blendMode(PGraphics.SCREEN);
+      pg.blendMode(PConstants.SCREEN);
     } else if ("REPLACE".equals(mode)) {
-      pg.blendMode(PGraphics.REPLACE);
+      pg.blendMode(PConstants.REPLACE);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'BLEND', 'ADD', 'SUBTRACT', 'DARKEST', 'LIGHTEST', 'DIFFERENCE', 'EXCLUSION', 'MULTIPLY', 'SCREEN', or 'REPLACE'.");
     }

@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -46,11 +47,11 @@ public class PtextAlign extends NamedWarpScriptFunction implements WarpScriptSta
     int alignX = 0;
     
     if ("LEFT".equals(alignXstr)) {
-      alignX = PGraphics.LEFT;
+      alignX = PConstants.LEFT;
     } else if ("RIGHT".equals(alignXstr)) {
-      alignX = PGraphics.RIGHT;
+      alignX = PConstants.RIGHT;
     } else if ("CENTER".equals(alignXstr)) {
-      alignX = PGraphics.CENTER;
+      alignX = PConstants.CENTER;
     } else {
       throw new WarpScriptException(getName() + " invalid alignment for X, should be 'LEFT', 'RIGHT' or 'CENTER'.");
     }
@@ -62,13 +63,13 @@ public class PtextAlign extends NamedWarpScriptFunction implements WarpScriptSta
       int alignY = 0;
       
       if ("TOP".equals(alignYstr)) {
-        alignY = PGraphics.TOP;
+        alignY = PConstants.TOP;
       } else if ("BOTTOM".equals(alignYstr)) {
-        alignY = PGraphics.BOTTOM;
+        alignY = PConstants.BOTTOM;
       } else if ("CENTER".equals(alignYstr)) {
-        alignY = PGraphics.CENTER;
+        alignY = PConstants.CENTER;
       } else if ("BASELINE".equals(alignYstr)) {
-        alignY = PGraphics.BASELINE;
+        alignY = PConstants.BASELINE;
       } else {
         throw new WarpScriptException(getName() + " invalid alignment for Y, should be 'TOP', 'BOTTOM', 'CENTER' or 'BASELINE'.");
       }

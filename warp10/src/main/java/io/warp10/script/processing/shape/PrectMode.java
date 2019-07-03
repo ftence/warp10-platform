@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,13 +46,13 @@ public class PrectMode extends NamedWarpScriptFunction implements WarpScriptStac
     String mode = params.get(1).toString();
     
     if ("CORNER".equals(mode)) {
-      pg.rectMode(PGraphics.CORNER);      
+      pg.rectMode(PConstants.CORNER);
     } else if ("CORNERS".equals(mode)) {
-      pg.rectMode(PGraphics.CORNERS);
+      pg.rectMode(PConstants.CORNERS);
     } else if ("RADIUS".equals(mode)) {
-      pg.rectMode(PGraphics.RADIUS);
+      pg.rectMode(PConstants.RADIUS);
     } else if ("CENTER".equals(mode)) {
-      pg.rectMode(PGraphics.CENTER);
+      pg.rectMode(PConstants.CENTER);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'CENTER', 'RADIUS', 'CORNER' or 'CORNERS'.");
     }

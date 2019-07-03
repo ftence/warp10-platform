@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -50,21 +51,21 @@ public class Pfilter extends NamedWarpScriptFunction implements WarpScriptStackF
     int kind = 0;
 
     if ("THRESHOLD".equals(kindstr)) {
-      kind = PGraphics.THRESHOLD;
+      kind = PConstants.THRESHOLD;
     } else if ("GRAY".equals(kindstr)) {
-      kind = PGraphics.GRAY;
+      kind = PConstants.GRAY;
     } else if ("OPAQUE".equals(kindstr)) {
-      kind = PGraphics.OPAQUE;
+      kind = PConstants.OPAQUE;
     } else if ("INVERT".equals(kindstr)) {
-      kind = PGraphics.INVERT;
+      kind = PConstants.INVERT;
     } else if ("POSTERIZE".equals(kindstr)) {
-      kind = PGraphics.POSTERIZE;
+      kind = PConstants.POSTERIZE;
     } else if ("BLUR".equals(kindstr)) {
-      kind = PGraphics.BLUR;
+      kind = PConstants.BLUR;
     } else if ("ERODE".equals(kindstr)) {
-      kind = PGraphics.ERODE;
+      kind = PConstants.ERODE;
     } else if ("DILATE".equals(kindstr)) {
-      kind = PGraphics.DILATE;
+      kind = PConstants.DILATE;
     } else {
       throw new WarpScriptException(getName() + " invalid mode.");
     }

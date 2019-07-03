@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,11 +46,11 @@ public class PimageMode extends NamedWarpScriptFunction implements WarpScriptSta
     String mode = params.get(1).toString();
     
     if ("CORNER".equals(mode)) {
-      pg.imageMode(PGraphics.CORNER);      
+      pg.imageMode(PConstants.CORNER);
     } else if ("CORNERS".equals(mode)) {
-      pg.imageMode(PGraphics.CORNERS);
+      pg.imageMode(PConstants.CORNERS);
     } else if ("CENTER".equals(mode)) {
-      pg.imageMode(PGraphics.CENTER);
+      pg.imageMode(PConstants.CENTER);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'CENTER', 'CORNER' or 'CORNERS'.");
     }

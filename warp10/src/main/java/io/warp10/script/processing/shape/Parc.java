@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -57,11 +58,11 @@ public class Parc extends NamedWarpScriptFunction implements WarpScriptStackFunc
       String modeparam = params.get(7).toString();
       
       if ("CHORD".equals(modeparam)) {
-        mode = PGraphics.CHORD;
+        mode = PConstants.CHORD;
       } else if ("PIE".equals(modeparam)) {
-        mode = PGraphics.PIE;
+        mode = PConstants.PIE;
       } else if ("OPEN".equals(modeparam)) {
-        mode = PGraphics.OPEN;
+        mode = PConstants.OPEN;
       } else {
         throw new WarpScriptException(getName() + " invalid mode, expected 'CHORD', 'PIE' or 'OPEN'.");
       }

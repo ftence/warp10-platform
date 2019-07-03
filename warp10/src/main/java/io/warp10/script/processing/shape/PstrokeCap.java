@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,11 +46,11 @@ public class PstrokeCap extends NamedWarpScriptFunction implements WarpScriptSta
     String mode = params.get(1).toString();
     
     if ("SQUARE".equals(mode)) {
-      pg.strokeCap(PGraphics.SQUARE);      
+      pg.strokeCap(PConstants.SQUARE);
     } else if ("PROJECT".equals(mode)) {
-      pg.strokeCap(PGraphics.PROJECT);
+      pg.strokeCap(PConstants.PROJECT);
     } else if ("ROUND".equals(mode)) {
-      pg.strokeCap(PGraphics.ROUND);
+      pg.strokeCap(PConstants.ROUND);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'SQUARE', 'PROJECT' or 'ROUND'.");
     }

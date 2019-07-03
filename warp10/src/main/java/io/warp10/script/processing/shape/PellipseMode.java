@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -45,13 +46,13 @@ public class PellipseMode extends NamedWarpScriptFunction implements WarpScriptS
     String mode = params.get(1).toString();
     
     if ("CORNER".equals(mode)) {
-      pg.ellipseMode(PGraphics.CORNER);      
+      pg.ellipseMode(PConstants.CORNER);
     } else if ("CORNERS".equals(mode)) {
-      pg.ellipseMode(PGraphics.CORNERS);
+      pg.ellipseMode(PConstants.CORNERS);
     } else if ("RADIUS".equals(mode)) {
-      pg.ellipseMode(PGraphics.RADIUS);
+      pg.ellipseMode(PConstants.RADIUS);
     } else if ("CENTER".equals(mode)) {
-      pg.ellipseMode(PGraphics.CENTER);
+      pg.ellipseMode(PConstants.CENTER);
     } else {
       throw new WarpScriptException(getName() + ": invalid mode, should be 'CENTER', 'RADIUS', 'CORNER' or 'CORNERS'.");
     }

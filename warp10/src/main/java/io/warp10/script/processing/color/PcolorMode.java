@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 import processing.core.PImage;
 
@@ -49,7 +50,7 @@ public class PcolorMode extends NamedWarpScriptFunction implements WarpScriptSta
       throw new WarpScriptException(getName() + ": invalid mode, should be one of 'RGB' or 'HSB'");      
     }
     
-    int mode = "RGB".equals(modestr) ? PGraphics.RGB : PGraphics.HSB;
+    int mode = "RGB".equals(modestr) ? PConstants.RGB : PConstants.HSB;
     
     if (2 == params.size()) {
       pg.colorMode(mode);

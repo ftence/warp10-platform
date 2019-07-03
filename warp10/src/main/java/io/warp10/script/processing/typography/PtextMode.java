@@ -24,6 +24,7 @@ import io.warp10.script.processing.ProcessingUtil;
 
 import java.util.List;
 
+import processing.core.PConstants;
 import processing.core.PGraphics;
 
 /**
@@ -43,9 +44,9 @@ public class PtextMode extends NamedWarpScriptFunction implements WarpScriptStac
     PGraphics pg = (PGraphics) params.get(0);
 
     if ("MODEL".equals(params.get(1))) {
-      pg.textMode(PGraphics.MODEL);
+      pg.textMode(PConstants.MODEL);
     } else if ("SHAPE".equals(params.get(1))) {
-      pg.textMode(PGraphics.SHAPE);      
+      pg.textMode(PConstants.SHAPE);
     } else {
       throw new WarpScriptException(getName() + " invalid mode, should be 'MODEL' or 'SHAPE'.");
     }
