@@ -259,7 +259,7 @@ public class EgressExecHandler extends AbstractHandler {
         long nano = System.nanoTime();
         
         try {
-          if (Boolean.TRUE.equals(stack.getAttribute(WarpScriptStack.ATTRIBUTE_LINENO)) && !((MemoryWarpScriptStack) stack).isInMultiline()) {
+          if (Boolean.TRUE.equals(stack.getAttribute(WarpScriptStack.ATTRIBUTE_LINENO)) && 0 == ((MemoryWarpScriptStack) stack).getMultilineNestingLevel()) {
             // We call 'exec' so statements are correctly put in macros if we are currently building one
             stack.exec("'[Line #" + Long.toString(lineno) + "]'");
             stack.exec(WarpScriptLib.SECTION);

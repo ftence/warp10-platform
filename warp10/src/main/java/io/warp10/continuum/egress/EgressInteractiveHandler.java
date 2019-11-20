@@ -349,7 +349,7 @@ public class EgressInteractiveHandler extends WebSocketHandler.Simple implements
         sb.append("#");
       }
       
-      if (stack.isInMultiline()) {
+      if (0 < stack.getMultilineNestingLevel()) {
         sb.append("'");
       }
       

@@ -130,7 +130,7 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
   
   private AtomicBoolean inComment = new AtomicBoolean(false);
 
-  private AtomicBoolean inMultiline = new AtomicBoolean(false);
+  private AtomicInteger multilineNestingLevel = new AtomicInteger(0);
   
   private StringBuilder multiline;
 
@@ -527,16 +527,16 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
             
       line = UnsafeString.sanitizeStrings(line);
       
-      if (-1 != UnsafeString.indexOf(line, ' ') && !inMultiline.get()) {
+      if (-1 != UnsafeString.indexOf(line, ' ') && 0 == multilineNestingLevel.get()) {
         //statements = line.split(" +");
         statements = UnsafeString.split(line, ' ');
       } else {
         // We're either in multiline mode or the line had no whitespace inside
         statements = new String[1];
-        if (inMultiline.get()) {
-          // If the line only contained the end of multiline indicator with possible wsp on both sides
+        if (0 < multilineNestingLevel.get()) {
+          // If the line only contained the end or start of multiline indicator with possible wsp on both sides
           // then set the statement to that, otherwise set it to the raw line
-          if(WarpScriptStack.MULTILINE_END.equals(line)) {
+          if(WarpScriptStack.MULTILINE_END.equals(line) || WarpScriptStack.MULTILINE_START.equals(line)) {
             statements[0] = line;
           } else {
             statements[0] = rawline;
@@ -564,7 +564,7 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
           // Skip empty statements if we are not currently building a multiline
           //
 
-          if (0 == stmt.length() && !inMultiline.get()) {
+          if (0 == stmt.length() && 0 == multilineNestingLevel.get()) {
             continue;
           }
 
@@ -572,7 +572,7 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
           // Trim statement
           //
 
-          if (!inMultiline.get()) {
+          if (0 == multilineNestingLevel.get()) {
             stmt = stmt.trim();
           }
 
@@ -580,37 +580,48 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
           // End execution on encountering a comment
           //
 
-          if (!inMultiline.get() && stmt.length() > 0 && (stmt.charAt(0) == '#' || (stmt.charAt(0) == '/' && stmt.length() >= 2 && stmt.charAt(1) == '/'))) {
+          if (0 == multilineNestingLevel.get() && stmt.length() > 0 && (stmt.charAt(0) == '#' || (stmt.charAt(0) == '/' && stmt.length() >= 2 && stmt.charAt(1) == '/'))) {
             // Skip comments and blank lines
             return;
           }
 
           if (WarpScriptStack.MULTILINE_END.equals(stmt)) {
-            if (!inMultiline.get()) {
+            if (0 == multilineNestingLevel.get()) {
               throw new WarpScriptException("Not inside a multiline.");
             }
-            inMultiline.set(false);
 
-            String mlcontent = multiline.toString();
+            if (0 == multilineNestingLevel.decrementAndGet()) {
+              String mlcontent = multiline.toString();
 
-            if (null != secureScript) {
-              secureScript.append(" ");
-              secureScript.append("'");
-              try {
-                secureScript.append(WarpURLEncoder.encode(mlcontent, StandardCharsets.UTF_8));
-              } catch (UnsupportedEncodingException uee) {
-              }
-              secureScript.append("'");
-            } else {
-              if (macros.isEmpty()) {
-                this.push(mlcontent);
+              if (null != secureScript) {
+                secureScript.append(" ");
+                secureScript.append("'");
+                try {
+                  secureScript.append(WarpURLEncoder.encode(mlcontent, StandardCharsets.UTF_8));
+                } catch (UnsupportedEncodingException uee) {
+                }
+                secureScript.append("'");
               } else {
-                macros.get(0).add(mlcontent);
+                if (macros.isEmpty()) {
+                  this.push(mlcontent);
+                } else {
+                  macros.get(0).add(mlcontent);
+                }
               }
+              multiline.setLength(0);
+              continue;
             }
-            multiline.setLength(0);
-            continue;
-          } else if (inMultiline.get()) {
+          } else if (WarpScriptStack.MULTILINE_START.equals(stmt)) {
+            if (1 != statements.length) {
+              throw new WarpScriptException("Can only start multiline strings by using " + WarpScriptStack.MULTILINE_START + " on a line by itself.");
+            }
+            if (0 == multilineNestingLevel.getAndIncrement()) {
+              multiline = new StringBuilder();
+              continue;
+            }
+          }
+
+          if (0 < multilineNestingLevel.get()) {
             if (multiline.length() > 0) {
               multiline.append("\n");
             }
@@ -626,13 +637,6 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
             continue;
           } else if (WarpScriptStack.COMMENT_START.equals(stmt)) {
             inComment.set(true);
-            continue;
-          } else if (WarpScriptStack.MULTILINE_START.equals(stmt)) {
-            if (1 != statements.length) {
-              throw new WarpScriptException("Can only start multiline strings by using " + WarpScriptStack.MULTILINE_START + " on a line by itself.");
-            }
-            inMultiline.set(true);
-            multiline = new StringBuilder();
             continue;
           }
 
@@ -1299,7 +1303,7 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
   
   @Override
   public void checkBalanced() throws WarpScriptException {
-    if (inMultiline.get()) {
+    if (0 < multilineNestingLevel.get()) {
       throw new WarpScriptException("Unbalanced " + WarpScriptStack.MULTILINE_START + " construct.");
     }
     if (inComment.get()) {
@@ -1443,8 +1447,8 @@ public class MemoryWarpScriptStack implements WarpScriptStack, Progressable {
     return this.macros.size();
   }
   
-  public boolean isInMultiline() {
-    return this.inMultiline.get();
+  public int getMultilineNestingLevel() {
+    return this.multilineNestingLevel.get();
   }
   
   public boolean isInComment() {
