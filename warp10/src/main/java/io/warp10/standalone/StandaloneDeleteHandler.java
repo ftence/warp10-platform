@@ -37,7 +37,6 @@ import io.warp10.continuum.thrift.data.LoggingEvent;
 import io.warp10.crypto.CryptoUtils;
 import io.warp10.crypto.KeyStore;
 import io.warp10.crypto.OrderPreservingBase64;
-import io.warp10.crypto.SipHashInline;
 import io.warp10.quasar.token.thrift.data.WriteToken;
 import io.warp10.script.WarpScriptException;
 import io.warp10.sensision.Sensision;
@@ -54,18 +53,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.regex.Matcher;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.commons.lang3.JavaVersion;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.thrift.TDeserializer;
@@ -90,16 +86,10 @@ public class StandaloneDeleteHandler extends AbstractHandler {
   private final StoreClient storeClient;
   private final StandaloneDirectoryClient directoryClient;
   
-  private final byte[] classKey;
-  private final byte[] labelsKey;  
-  
   /**
    * Key to wrap the token in the file names
    */
   private final byte[] datalogPSK;
-  
-  private final long[] classKeyLongs;
-  private final long[] labelsKeyLongs;
   
   private DateTimeFormatter fmt = ISODateTimeFormat.dateTimeParser();
 
@@ -120,12 +110,6 @@ public class StandaloneDeleteHandler extends AbstractHandler {
     this.storeClient = storeClient;
     this.directoryClient = directoryClient;
     
-    this.classKey = this.keyStore.getKey(KeyStore.SIPHASH_CLASS);
-    this.classKeyLongs = SipHashInline.getKey(this.classKey);
-    
-    this.labelsKey = this.keyStore.getKey(KeyStore.SIPHASH_LABELS);
-    this.labelsKeyLongs = SipHashInline.getKey(this.labelsKey);
-
     String dirProp = WarpConfig.getProperty(Configuration.DATALOG_DIR);
     if (null != dirProp) {
       File dir = new File(dirProp);

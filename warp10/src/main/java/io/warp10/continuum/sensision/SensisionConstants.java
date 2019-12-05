@@ -376,6 +376,11 @@ public class SensisionConstants {
   public static final String SENSISION_CLASS_CONTINUUM_INGRESS_DELETE_REQUESTS = "warp.ingress.delete.requests";
 
   /**
+   * Number of times a 'meta' request was done using an invalid token
+   */
+  public static final String SENSISION_CLASS_CONTINUUM_INGRESS_DELETE_INVALIDTOKEN = "warp.ingress.delete.invalidtoken";
+
+  /**
    * Number of GTS which were concerned by the 'delete' requests.
    */
   public static final String SENSISION_CLASS_CONTINUUM_INGRESS_DELETE_GTS = "warp.ingress.delete.gts";
@@ -386,7 +391,7 @@ public class SensisionConstants {
   public static final String SENSISION_CLASS_CONTINUUM_INGRESS_UPDATE_INVALIDTOKEN = "warp.ingress.update.invalidtoken";
   
   /**
-   * Number of 'update' requests which had gzipped content
+   * Number of 'update' requests which had gzipped content in the Ingress component
    */
   public static final String SENSISION_CLASS_CONTINUUM_INGRESS_UPDATE_GZIPPED = "warp.ingress.update.gzipped";
   
@@ -491,9 +496,14 @@ public class SensisionConstants {
   public static final String SENSISION_CLASS_CONTINUUM_STREAM_UPDATE_TIME_US = "warp.update.stream.time.us";
 
   /**
-   * Number of 'update' requests received by the standlone version of continuum
+   * Number of 'update' requests received by the standalone version of continuum
    */
   public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_UPDATE_REQUESTS = "warp.standalone.update.requests";
+
+  /**
+   * Number of 'update' requests which had gzipped content in the standalone version of continuum
+   */
+  public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_UPDATE_GZIPPED = "warp.standalone.update.gzipped";
 
   /**
    * Number of 'update' requests received by the standlone streaming version of continuum
@@ -516,7 +526,7 @@ public class SensisionConstants {
   public static final String SENSISION_CLASS_CONTINUUM_STREAM_UPDATE_REQUESTS = "warp.update.stream.requests";
 
   /**
-   * Number of 'update' messages received by the standlone streaming version of continuum
+   * Number of 'update' messages received by the standalone streaming version of continuum
    */
   public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_STREAM_UPDATE_MESSAGES = "warp.standalone.update.stream.messages";
 
@@ -549,6 +559,21 @@ public class SensisionConstants {
    * Number of parse error encountered in 'update' requests in the standalone version of continuum
    */
   public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_UPDATE_PARSEERRORS = "warp.standalone.update.parseerrors";
+
+  /**
+   * Number of 'meta' requests in the standalone version of continuum
+   */
+  public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_META_REQUESTS = "warp.standalone.meta.requests";
+
+  /**
+   * Number of 'meta' requests in the standalone version of continuum
+   */
+  public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_META_INVALIDTOKEN = "warp.standalone.meta.invalidtoken";
+
+  /**
+   * Number of 'meta' requests in the standalone version of continuum
+   */
+  public static final String SENSISION_CLASS_CONTINUUM_STANDALONE_META_GZIPPED = "warp.standalone.meta.gzipped";
 
   /**
    * Number of parse error encountered in 'update' requests in the standalone streaming version of continuum

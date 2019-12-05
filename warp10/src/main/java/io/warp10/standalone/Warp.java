@@ -453,7 +453,19 @@ public class Warp extends WarpDist implements Runnable {
     
     if (!analyticsEngineOnly) {
       gzip = new GzipHandler();
-      gzip.setHandler(new StandaloneIngressHandler(keystore, sdc, scc));
+      gzip.setHandler(new StandaloneUpdateHandler(keystore, sdc, scc));
+      gzip.setMinGzipSize(0);
+      gzip.addIncludedMethods("POST");
+      handlers.addHandler(gzip);
+
+      gzip = new GzipHandler();
+      gzip.setHandler(new StandaloneMetaHandler(keystore, sdc, scc));
+      gzip.setMinGzipSize(0);
+      gzip.addIncludedMethods("POST");
+      handlers.addHandler(gzip);
+
+      gzip = new GzipHandler();
+      gzip.setHandler(new StandaloneDeleteHandler(keystore, sdc, scc));
       gzip.setMinGzipSize(0);
       gzip.addIncludedMethods("POST");
       handlers.addHandler(gzip);
@@ -471,12 +483,6 @@ public class Warp extends WarpDist implements Runnable {
         gzip.addIncludedMethods("POST");
         handlers.addHandler(gzip);      
       }
-
-      gzip = new GzipHandler();
-      gzip.setHandler(new StandaloneDeleteHandler(keystore, sdc, scc));
-      gzip.setMinGzipSize(0);
-      gzip.addIncludedMethods("POST");
-      handlers.addHandler(gzip);
       
       if (enablePlasma) {
         StandalonePlasmaHandler plasmaHandler = new StandalonePlasmaHandler(keystore, properties, sdc);
