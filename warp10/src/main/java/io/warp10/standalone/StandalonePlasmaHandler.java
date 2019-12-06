@@ -67,13 +67,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.thrift.TException;
 import org.apache.thrift.TSerializer;
 import org.apache.thrift.protocol.TCompactProtocol;
-import org.apache.thrift.protocol.TCompactProtocol.Factory;
 import org.boon.json.JsonSerializer;
 import org.boon.json.JsonSerializerFactory;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.UpgradeRequest;
-import org.eclipse.jetty.websocket.api.UpgradeResponse;
 import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -202,11 +199,7 @@ public class StandalonePlasmaHandler extends WebSocketHandler.Simple implements 
           return;
         }
         
-        labelsSelector.remove(Constants.PRODUCER_LABEL);
-        labelsSelector.remove(Constants.OWNER_LABEL);
-        labelsSelector.remove(Constants.APPLICATION_LABEL);
-
-        labelsSelector.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+        Tokens.updateLabelSelectorsWithReadToken(labelsSelector, rtoken);
         
         List<String> clsSels = new ArrayList<String>();
         List<Map<String,String>> lblsSels = new ArrayList<Map<String,String>>();

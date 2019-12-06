@@ -700,21 +700,8 @@ public class StandaloneStreamUpdateHandler extends WebSocketHandler.Simple {
       //
         
       this.extraLabels = new HashMap<String,String>();
+      Tokens.updateLabelsWithWriteTokenInfos(this.extraLabels, wtoken.getLabels(), application, producer, owner);
       
-      // Add labels from the WriteToken if they exist
-      if (wtoken.getLabelsSize() > 0) {
-        extraLabels.putAll(wtoken.getLabels());
-      }
-      
-      // Force internal labels
-      this.extraLabels.put(Constants.PRODUCER_LABEL, producer);
-      this.extraLabels.put(Constants.OWNER_LABEL, owner);
-      // FIXME(hbs): remove me
-      if (null != application) {
-        this.extraLabels.put(Constants.APPLICATION_LABEL, application);
-        sensisionLabels.put(SensisionConstants.SENSISION_LABEL_APPLICATION, application);
-      }
-
       this.ignoor = ignoor;
       this.wtoken = wtoken;
       this.encodedToken = token;

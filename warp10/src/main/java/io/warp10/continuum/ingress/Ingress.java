@@ -791,19 +791,10 @@ public class Ingress extends AbstractHandler implements Runnable {
         //
         
         Map<String,String> extraLabels = new HashMap<String,String>();
+        Tokens.updateLabelsWithWriteTokenInfos(extraLabels, writeToken.getLabels(), application, producer, owner);
         
-        // Add labels from the WriteToken if they exist
-        if (writeToken.getLabelsSize() > 0) {
-          extraLabels.putAll(writeToken.getLabels());
-        }
-        
-        // Force internal labels
-        extraLabels.put(Constants.PRODUCER_LABEL, producer);
-        extraLabels.put(Constants.OWNER_LABEL, owner);
-
         // FIXME(hbs): remove me
         if (null != application) {
-          extraLabels.put(Constants.APPLICATION_LABEL, application);
           sensisionLabels.put(SensisionConstants.SENSISION_LABEL_APPLICATION, application);
         }
 
@@ -1314,23 +1305,9 @@ public class Ingress extends AbstractHandler implements Runnable {
           response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid metadata " + line);
           return;
         }
-        
-        // Add labels from the WriteToken if they exist
-        if (writeToken.getLabelsSize() > 0) {
-          metadata.getLabels().putAll(writeToken.getLabels());
-        }
 
-        //
-        // Force owner/producer
-        //
+        Tokens.updateLabelsWithWriteTokenInfos(metadata.getLabels(), writeToken.getLabels(), application, producer, owner);
         
-        metadata.getLabels().put(Constants.PRODUCER_LABEL, producer);
-        metadata.getLabels().put(Constants.OWNER_LABEL, owner);
-      
-        if (null != application) {
-          metadata.getLabels().put(Constants.APPLICATION_LABEL, application);
-        }
-
         if (!MetadataUtils.validateMetadata(metadata)) {
           Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_INGRESS_META_INVALID, sensisionLabels, 1);
           response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid metadata " + line);
@@ -1465,25 +1442,9 @@ public class Ingress extends AbstractHandler implements Runnable {
       
       Map<String,String> extraLabels = new HashMap<String,String>();
 
-      // Add extra labels, remove producer,owner,app
-      if (writeToken.getLabelsSize() > 0) {
-        extraLabels.putAll(writeToken.getLabels());
-        extraLabels.remove(Constants.PRODUCER_LABEL);
-        extraLabels.remove(Constants.OWNER_LABEL);
-        extraLabels.remove(Constants.APPLICATION_LABEL);
-      }
-
-      //
       // Only set owner and potentially app, producer may vary
-      //      
-      extraLabels.put(Constants.OWNER_LABEL, owner);
-      if (null != application) {
-        extraLabels.put(Constants.APPLICATION_LABEL, application);
-        sensisionLabels.put(SensisionConstants.SENSISION_LABEL_APPLICATION, application);
-      }
+      Tokens.updateLabelsWithWriteTokenInfos(extraLabels, writeToken.getLabels(), application, null, owner);
 
-      boolean hasRange = false;
-      
       //
       // Extract start/end
       //

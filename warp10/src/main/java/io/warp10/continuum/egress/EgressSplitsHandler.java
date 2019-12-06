@@ -129,11 +129,7 @@ public class EgressSplitsHandler extends AbstractHandler {
     String classSelector = elts[0].toString();
     Map<String,String> labelsSelector = (Map<String,String>) elts[1];
     
-    labelsSelector.remove(Constants.PRODUCER_LABEL);
-    labelsSelector.remove(Constants.OWNER_LABEL);
-    labelsSelector.remove(Constants.APPLICATION_LABEL);
-    
-    labelsSelector.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+    Tokens.updateLabelSelectorsWithReadToken(labelsSelector, rtoken);
     
     List<String> clsSels = new ArrayList<String>();
     List<Map<String,String>> lblsSels = new ArrayList<Map<String,String>>();

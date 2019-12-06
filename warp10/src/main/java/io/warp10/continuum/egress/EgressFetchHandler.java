@@ -446,11 +446,7 @@ public class EgressFetchHandler extends AbstractHandler {
           // Force 'producer'/'owner'/'app' from token
           //
           
-          labelsSelectors.remove(Constants.PRODUCER_LABEL);
-          labelsSelectors.remove(Constants.OWNER_LABEL);
-          labelsSelectors.remove(Constants.APPLICATION_LABEL);
-          
-          labelsSelectors.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+          Tokens.updateLabelSelectorsWithReadToken(labelsSelectors, rtoken);
 
           List<Metadata> metas = null;
           

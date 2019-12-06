@@ -278,29 +278,21 @@ public class Tokens {
    * those, thus leading potentially to data exposure
    * 
    */
-  public static Map<String,String> labelSelectorsFromReadToken(ReadToken rtoken) {
-    
-    Map<String,String> labelSelectors = new HashMap<String,String>();
-    
+  public static void updateLabelSelectorsWithReadToken(Map<String,String> labelSelectors, ReadToken rtoken) {
     List<String> owners = new ArrayList<String>();
     List<String> producers = new ArrayList<String>();
-    Map<String, String> labels = new HashMap<String, String>();
 
     if (rtoken.getLabelsSize() > 0) {
-      labels = rtoken.getLabels();
-      if (!labels.isEmpty()) {
-        for (Map.Entry<String, String> entry : labels.entrySet()) {
-          switch (entry.getKey()) {
-            case Constants.OWNER_LABEL:
-            case Constants.APPLICATION_LABEL:
-            case Constants.PRODUCER_LABEL:
-              continue;
-            default:
-              labelSelectors.put(entry.getKey(),entry.getValue());
-          }
-        }
-      }
+      labelSelectors.putAll(rtoken.getLabels());
     }
+
+    //
+    // Force 'producer'/'owner'/'app' from token
+    //
+
+    labelSelectors.remove(Constants.PRODUCER_LABEL);
+    labelSelectors.remove(Constants.OWNER_LABEL);
+    labelSelectors.remove(Constants.APPLICATION_LABEL);
 
     if (rtoken.getOwnersSize() > 0) {
       for (ByteBuffer bb: rtoken.getOwners()) {
@@ -376,8 +368,46 @@ public class Tokens {
         labelSelectors.put(Constants.PRODUCER_LABEL, sb.toString());
       }
     }
+  }
 
-    return labelSelectors;
+  public static void updateLabelsWithWriteToken(Map<String, String> map, WriteToken writeToken) {
+    String application = writeToken.getAppName();
+    String producer = Tokens.getUUID(writeToken.getProducerId());
+    String owner = Tokens.getUUID(writeToken.getOwnerId());
+
+    updateLabelsWithWriteTokenInfos(map, writeToken.getLabels(), application, producer, owner);
+  }
+
+  public static void updateLabelsWithWriteTokenInfos(Map<String, String> map, Map<String, String> writeTokenLabels, String application, String producer, String owner) {
+    //
+    // Add labels from the write token labels if they exist
+    //
+
+    if (!writeTokenLabels.isEmpty()) {
+      map.putAll(writeTokenLabels);
+    }
+
+    //
+    // Force internal labels
+    //
+
+    if (null != producer) {
+      map.put(Constants.PRODUCER_LABEL, producer);
+    } else {
+      map.remove(Constants.PRODUCER_LABEL);
+    }
+
+    if (null != owner) {
+      map.put(Constants.OWNER_LABEL, owner);
+    } else {
+      map.remove(Constants.OWNER_LABEL);
+    }
+
+    if (null != application) {
+      map.put(Constants.APPLICATION_LABEL, application);
+    } else {
+      map.remove(Constants.APPLICATION_LABEL);
+    }
   }
   
   /**

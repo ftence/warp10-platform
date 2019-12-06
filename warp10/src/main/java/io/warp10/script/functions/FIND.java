@@ -291,10 +291,7 @@ public class FIND extends NamedWarpScriptFunction implements WarpScriptStackFunc
     List<Map<String,String>> lblsSels = new ArrayList<Map<String,String>>();
 
     if (null != labelSelectors && null != classSelector) {
-      labelSelectors.remove(Constants.PRODUCER_LABEL);
-      labelSelectors.remove(Constants.OWNER_LABEL);
-      labelSelectors.remove(Constants.APPLICATION_LABEL);
-      labelSelectors.putAll(Tokens.labelSelectorsFromReadToken(rtoken));      
+      Tokens.updateLabelSelectorsWithReadToken(labelSelectors, rtoken);
       clsSels.add(classSelector);
       lblsSels.add(labelSelectors);
     }
@@ -318,10 +315,7 @@ public class FIND extends NamedWarpScriptFunction implements WarpScriptStackFunc
         
         if (drequest.isSetLabelsSelectors()) {
           for (Map<String,String> sel: drequest.getLabelsSelectors()) {
-            sel.remove(Constants.PRODUCER_LABEL);
-            sel.remove(Constants.OWNER_LABEL);
-            sel.remove(Constants.APPLICATION_LABEL);
-            sel.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+            Tokens.updateLabelSelectorsWithReadToken(sel, rtoken);
           }          
         }
       }

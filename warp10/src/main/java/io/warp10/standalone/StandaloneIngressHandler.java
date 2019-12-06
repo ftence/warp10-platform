@@ -407,23 +407,7 @@ public class StandaloneIngressHandler extends AbstractHandler {
         //
         
         Map<String,String> extraLabels = new HashMap<String,String>();
-        
-        // Add labels from the WriteToken if they exist
-        if (writeToken.getLabelsSize() > 0) {
-          extraLabels.putAll(writeToken.getLabels());
-        }
-        
-        // Force internal labels
-        extraLabels.put(Constants.PRODUCER_LABEL, producer);
-        extraLabels.put(Constants.OWNER_LABEL, owner);
-        // FIXME(hbs): remove me, apps should be set in all tokens now...
-        if (null != application) {
-          extraLabels.put(Constants.APPLICATION_LABEL, application);
-          sensisionLabels.put(SensisionConstants.SENSISION_LABEL_APPLICATION, application);
-        } else {
-          // remove application label
-          extraLabels.remove(Constants.APPLICATION_LABEL);
-        }
+        Tokens.updateLabelsWithWriteTokenInfos(extraLabels, writeToken.getLabels(), application, producer, owner);
         
         //
         // Determine if content if gzipped

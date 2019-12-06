@@ -17,11 +17,9 @@
 package io.warp10.script.functions;
 
 import io.warp10.continuum.Tokens;
-import io.warp10.continuum.gts.GeoTimeSerie;
 import io.warp10.continuum.store.Constants;
 import io.warp10.continuum.store.DirectoryClient;
 import io.warp10.continuum.store.thrift.data.DirectoryRequest;
-import io.warp10.continuum.store.thrift.data.Metadata;
 import io.warp10.quasar.token.thrift.data.ReadToken;
 import io.warp10.script.NamedWarpScriptFunction;
 import io.warp10.script.WarpScriptStackFunction;
@@ -30,12 +28,8 @@ import io.warp10.script.WarpScriptStack;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 
 /**
  * Estimate cardinalities of Geo Time Series matching some criteria
@@ -118,10 +112,7 @@ public class FINDSTATS extends NamedWarpScriptFunction implements WarpScriptStac
     
     ReadToken rtoken = Tokens.extractReadToken(token);
 
-    labelSelectors.remove(Constants.PRODUCER_LABEL);
-    labelSelectors.remove(Constants.OWNER_LABEL);
-    labelSelectors.remove(Constants.APPLICATION_LABEL);
-    labelSelectors.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+    Tokens.updateLabelSelectorsWithReadToken(labelSelectors, rtoken);
     
     List<String> clsSels = new ArrayList<String>();
     List<Map<String,String>> lblsSels = new ArrayList<Map<String,String>>();

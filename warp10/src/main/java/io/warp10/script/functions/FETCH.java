@@ -312,10 +312,7 @@ public class FETCH extends NamedWarpScriptFunction implements WarpScriptStackFun
         if (null == m.getLabels()) {
           m.setLabels(new HashMap<String,String>());
         }
-        m.getLabels().remove(Constants.PRODUCER_LABEL);
-        m.getLabels().remove(Constants.OWNER_LABEL);
-        m.getLabels().remove(Constants.APPLICATION_LABEL);
-        m.getLabels().putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+        Tokens.updateLabelSelectorsWithReadToken(m.getLabels(), rtoken);
                 
         if (m.getLabels().containsKey(Constants.PRODUCER_LABEL) && '=' == m.getLabels().get(Constants.PRODUCER_LABEL).charAt(0)) {
           m.getLabels().put(Constants.PRODUCER_LABEL, m.getLabels().get(Constants.PRODUCER_LABEL).substring(1));
@@ -346,18 +343,12 @@ public class FETCH extends NamedWarpScriptFunction implements WarpScriptStackFun
         for (Pair<Object,Object> pair: (List<Pair<Object,Object>>) params.get(PARAM_SELECTOR_PAIRS)) {
           clsSels.add(pair.getLeft().toString());
           Map<String,String> labelSelectors = (Map<String,String>) pair.getRight();
-          labelSelectors.remove(Constants.PRODUCER_LABEL);
-          labelSelectors.remove(Constants.OWNER_LABEL);
-          labelSelectors.remove(Constants.APPLICATION_LABEL);
-          labelSelectors.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+          Tokens.updateLabelSelectorsWithReadToken(labelSelectors, rtoken);
           lblsSels.add((Map<String,String>) labelSelectors);
         }
       } else {
         Map<String,String> labelSelectors = (Map<String,String>) params.get(PARAM_LABELS);
-        labelSelectors.remove(Constants.PRODUCER_LABEL);
-        labelSelectors.remove(Constants.OWNER_LABEL);
-        labelSelectors.remove(Constants.APPLICATION_LABEL);
-        labelSelectors.putAll(Tokens.labelSelectorsFromReadToken(rtoken));
+        Tokens.updateLabelSelectorsWithReadToken(labelSelectors, rtoken);
         clsSels.add(params.get(PARAM_CLASS).toString());
         lblsSels.add(labelSelectors);
       }      
