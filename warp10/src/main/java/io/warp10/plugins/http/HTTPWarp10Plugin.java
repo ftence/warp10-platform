@@ -43,7 +43,7 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.warp10.SSLUtils;
+import io.warp10.HTTPUtils;
 import io.warp10.continuum.Configuration;
 import io.warp10.script.MemoryWarpScriptStack;
 import io.warp10.script.WarpScriptStack.Macro;
@@ -58,9 +58,12 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
   private static final String PARAM_PREFIX = "prefix";
   private static final String PARAM_PARSE_PAYLOAD = "parsePayload";
 
-  private static final String CONF_HTTP_HOST = "http.host";
-  private static final String CONF_HTTP_PORT = "http.port";
-  private static final String CONF_HTTP_TCP_BACKLOG = "http.tcp.backlog";
+  /**
+   * Prefix to http.host, http.port, http.acceptors, http.selectors, http.idle.timeout
+   * and the ssl variants http.ssl.host, http.ssl.port, http.ssl.acceptors, http.ssl.selectors, standalone.ssl.idle.timeout
+   * See the postfix comments for details in io.warp10.continuum.Configuration.
+   */
+  private static final String HTTP_PREFIX = "http";
 
   /**
    * Directory where spec files are located
@@ -72,10 +75,7 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
    */
   private static final String CONF_HTTP_PERIOD = "http.period";
 
-  private static final String CONF_HTTP_ACCEPTORS = "http.acceptors";
-  private static final String CONF_HTTP_SELECTORS = "http.selectors";
   private static final String CONF_HTTP_MAXTHREADS = "http.maxthreads";
-  private static final String CONF_HTTP_IDLE_TIMEOUT = "http.idle.timeout";
   private static final String CONF_HTTP_QUEUESIZE = "http.queuesize";
   private static final String CONF_HTTP_GZIP = "http.gzip";
   private static final String CONF_HTTP_LCHEADERS = "http.lcheaders";
@@ -87,16 +87,13 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
 
   private String dir;
   private long period;
-  private String host;
-  private int port = -1;
-  private int tcpBacklog = 0;
-  private int acceptors = 2;
-  private int selectors = 4;
+
+  private int httpPort = -1;
+  private int httpsPort = -1;
+
   private int maxthreads = -1;
-  private int idleTimeout = 30000;
   private BlockingQueue<Runnable> queue = null;
 
-  private int sslport = -1;
 
   /**
    * Map of uri to macros
@@ -141,34 +138,38 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
     // Start Jetty server
     //
 
-    if (-1 == maxthreads) {
-      maxthreads =  1 + acceptors + acceptors * selectors;
-    }
-    
-    Server server = new Server(new QueuedThreadPool(maxthreads, 8, idleTimeout, queue));
+    // Use default values for maxThreads, minThreads and idleTimeout. They will be updated later.
+    Server server = new Server(new QueuedThreadPool(200, 8, 60000, queue));
 
-    int minthreads = 1;
+    int minThreads = 1;
+    long maxIdleTimeout = 0;
     
-    if (-1 != this.port) {
-      ServerConnector connector = new ServerConnector(server, acceptors, selectors);
-      connector.setIdleTimeout(idleTimeout);
-      connector.setPort(port);
-      connector.setHost(host);
-      connector.setAcceptQueueSize(tcpBacklog);
+    if (-1 != this.httpPort) {
+      ServerConnector connector = HTTPUtils.getConnector(server, HTTP_PREFIX, false);
       connector.setName("Warp 10 HTTP Plugin Jetty HTTP Connector");
       server.addConnector(connector);
-      minthreads += acceptors + acceptors * selectors;
+      minThreads += connector.getAcceptors() + connector.getAcceptors() * connector.getSelectorManager().getSelectorCount();
+      maxIdleTimeout = connector.getIdleTimeout();
     }
 
-    if (-1 != this.sslport) {
-      ServerConnector connector = SSLUtils.getConnector(server, "http");
+    if (-1 != this.httpsPort) {
+      ServerConnector connector = HTTPUtils.getConnector(server, HTTP_PREFIX, true);
       connector.setName("Warp 10 HTTP Plugin Jetty HTTPS Connector");
       server.addConnector(connector);
-      minthreads += connector.getAcceptors() + connector.getAcceptors() * connector.getSelectorManager().getSelectorCount();
+      minThreads += connector.getAcceptors() + connector.getAcceptors() * connector.getSelectorManager().getSelectorCount();
+      maxIdleTimeout = Math.max(maxIdleTimeout, connector.getIdleTimeout());
     }
 
-    if (maxthreads < minthreads) {
-      throw new RuntimeException(CONF_HTTP_MAXTHREADS + " should be >= " + minthreads);
+
+    QueuedThreadPool pool = (QueuedThreadPool)server.getThreadPool();
+    pool.setIdleTimeout(maxIdleTimeout > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int)maxIdleTimeout);
+    if (maxthreads == -1) {
+      pool.setMaxThreads(minThreads);
+    } else {
+      if(maxthreads < minThreads) {
+        throw new RuntimeException(CONF_HTTP_MAXTHREADS + " should be >= " + minThreads);
+      }
+      pool.setMaxThreads(maxthreads);
     }
     
     WarpScriptHandler handler = new WarpScriptHandler(this);
@@ -335,19 +336,12 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
 
     this.period = Long.parseLong(properties.getProperty(CONF_HTTP_PERIOD, Long.toString(DEFAULT_PERIOD)));
     
-    
-    this.port = Integer.parseInt(properties.getProperty(CONF_HTTP_PORT, "-1"));
-    this.tcpBacklog = Integer.parseInt(properties.getProperty(CONF_HTTP_TCP_BACKLOG, "0"));
-    this.sslport = Integer.parseInt(properties.getProperty("http" + Configuration._SSL_PORT, "-1"));
+    this.httpPort = Integer.parseInt(properties.getProperty(HTTP_PREFIX + Configuration._PORT, "-1"));
+    this.httpsPort = Integer.parseInt(properties.getProperty(HTTP_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT, "-1"));
 
-    if (-1 == this.port && -1 == this.sslport) {
-      throw new RuntimeException("Either '" + CONF_HTTP_PORT + "' or 'http." + Configuration._SSL_PORT + "' must be set.");
+    if (-1 == this.httpPort && -1 == this.httpsPort) {
+      throw new RuntimeException("Either '" + HTTP_PREFIX + Configuration._PORT + "' or '" + HTTP_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT + "' must be set.");
     }
-    
-    host = properties.getProperty(CONF_HTTP_HOST, null);
-    acceptors = Integer.parseInt(properties.getProperty(CONF_HTTP_ACCEPTORS, String.valueOf(acceptors)));
-    selectors = Integer.parseInt(properties.getProperty(CONF_HTTP_SELECTORS, String.valueOf(selectors)));
-    idleTimeout = Integer.parseInt(properties.getProperty(CONF_HTTP_IDLE_TIMEOUT, String.valueOf(idleTimeout)));      
 
     maxthreads = Integer.parseInt(properties.getProperty(CONF_HTTP_MAXTHREADS, String.valueOf(maxthreads)));
 

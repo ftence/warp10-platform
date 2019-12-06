@@ -16,7 +16,7 @@
 
 package io.warp10.continuum.egress;
 
-import io.warp10.SSLUtils;
+import io.warp10.HTTPUtils;
 import io.warp10.continuum.Configuration;
 import io.warp10.continuum.JettyUtil;
 import io.warp10.continuum.store.DirectoryClient;
@@ -46,12 +46,12 @@ public class Egress {
   /**
    * Set of required parameters, those MUST be set
    */
-  private static final String[] REQUIRED_PROPERTIES = new String[] {
-    Configuration.EGRESS_HOST,
-    Configuration.EGRESS_PORT,
-    Configuration.EGRESS_ACCEPTORS,
-    Configuration.EGRESS_SELECTORS,
-    Configuration.EGRESS_IDLE_TIMEOUT,
+  private static final String[] REQUIRED_PROPERTIES = new String[]{
+    Configuration.EGRESS_PREFIX + Configuration._HOST,
+    Configuration.EGRESS_PREFIX + Configuration._PORT,
+    Configuration.EGRESS_PREFIX + Configuration._ACCEPTORS,
+    Configuration.EGRESS_PREFIX + Configuration._SELECTORS,
+    Configuration.EGRESS_PREFIX + Configuration._IDLE_TIMEOUT,
     Configuration.EGRESS_HBASE_DATA_ZKCONNECT,
     Configuration.EGRESS_HBASE_DATA_ZNODE,
     Configuration.EGRESS_HBASE_DATA_TABLE,
@@ -98,33 +98,22 @@ public class Egress {
     // Extract parameters from 'props'
     //
     
-    boolean useHttp = (null != props.getProperty(Configuration.EGRESS_PORT));
-    boolean useHttps = (null != props.getProperty(Configuration.EGRESS_PREFIX + Configuration._SSL_PORT));
+    boolean useHttp = (null != props.getProperty(Configuration.EGRESS_PREFIX + Configuration._PORT));
+    boolean useHttps = (null != props.getProperty(Configuration.EGRESS_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT));
 
     List<Connector> connectors = new ArrayList<Connector>();
     
     server = new Server();
 
     if (useHttp) {
-      int port = Integer.valueOf(props.getProperty(Configuration.EGRESS_PORT));
-      String host = props.getProperty(Configuration.EGRESS_HOST);
-      int tcpBacklog = Integer.valueOf(props.getProperty(Configuration.EGRESS_TCP_BACKLOG, "0"));
-      int acceptors = Integer.valueOf(props.getProperty(Configuration.EGRESS_ACCEPTORS));
-      int selectors = Integer.valueOf(props.getProperty(Configuration.EGRESS_SELECTORS));
-      long idleTimeout = Long.parseLong(props.getProperty(Configuration.EGRESS_IDLE_TIMEOUT));
-
-      ServerConnector connector = new ServerConnector(server, acceptors, selectors);
-      connector.setIdleTimeout(idleTimeout);
-      connector.setPort(port);
-      connector.setHost(host);
-      connector.setAcceptQueueSize(tcpBacklog);
+      ServerConnector connector = HTTPUtils.getConnector(server, Configuration.EGRESS_PREFIX, false);
       connector.setName("Continuum Egress HTTP");
       
       connectors.add(connector);
     }
     
     if (useHttps) {
-      ServerConnector connector = SSLUtils.getConnector(server, Configuration.EGRESS_PREFIX);
+      ServerConnector connector = HTTPUtils.getConnector(server, Configuration.EGRESS_PREFIX, true);
       connector.setName("Continuum Egress HTTPS");
       connectors.add(connector);
     }

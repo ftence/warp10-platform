@@ -16,7 +16,7 @@
 
 package io.warp10.continuum.plasma;
 
-import io.warp10.SSLUtils;
+import io.warp10.HTTPUtils;
 import io.warp10.continuum.Configuration;
 import io.warp10.continuum.JettyUtil;
 import io.warp10.continuum.KafkaOffsetCounters;
@@ -24,10 +24,8 @@ import io.warp10.continuum.KafkaSynchronizedConsumerPool;
 import io.warp10.continuum.KafkaSynchronizedConsumerPool.ConsumerFactory;
 import io.warp10.continuum.KafkaSynchronizedConsumerPool.Hook;
 import io.warp10.continuum.egress.ThriftDirectoryClient;
-import io.warp10.continuum.gts.GTSDecoder;
 import io.warp10.continuum.gts.GTSEncoder;
 import io.warp10.continuum.sensision.SensisionConstants;
-import io.warp10.continuum.store.Directory;
 import io.warp10.continuum.store.DirectoryClient;
 import io.warp10.continuum.store.thrift.data.KafkaDataMessage;
 import io.warp10.crypto.CryptoUtils;
@@ -37,7 +35,6 @@ import io.warp10.sensision.Sensision;
 import io.warp10.standalone.StandalonePlasmaHandler;
 
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,15 +90,15 @@ public class PlasmaFrontEnd extends StandalonePlasmaHandler implements Runnable,
     Configuration.PLASMA_FRONTEND_KAFKA_GROUPID,
     Configuration.PLASMA_FRONTEND_KAFKA_COMMITPERIOD,
     Configuration.PLASMA_FRONTEND_KAFKA_NTHREADS,
-    Configuration.PLASMA_FRONTEND_HOST,
-    Configuration.PLASMA_FRONTEND_PORT,
     Configuration.PLASMA_FRONTEND_MAXZNODESIZE,
     Configuration.PLASMA_FRONTEND_ZKCONNECT,
     Configuration.PLASMA_FRONTEND_ZNODE,
     Configuration.PLASMA_FRONTEND_SUBSCRIBE_DELAY,
-    Configuration.PLASMA_FRONTEND_ACCEPTORS,
-    Configuration.PLASMA_FRONTEND_SELECTORS,
-    Configuration.PLASMA_FRONTEND_IDLE_TIMEOUT,
+    Configuration.PLASMA_FRONTEND_PREFIX + Configuration._HOST,
+    Configuration.PLASMA_FRONTEND_PREFIX + Configuration._PORT,
+    Configuration.PLASMA_FRONTEND_PREFIX + Configuration._ACCEPTORS,
+    Configuration.PLASMA_FRONTEND_PREFIX + Configuration._SELECTORS,
+    Configuration.PLASMA_FRONTEND_PREFIX + Configuration._IDLE_TIMEOUT,
     Configuration.DIRECTORY_ZK_QUORUM,
     Configuration.DIRECTORY_ZK_ZNODE,
     Configuration.DIRECTORY_PSK,
@@ -305,25 +302,20 @@ public class PlasmaFrontEnd extends StandalonePlasmaHandler implements Runnable,
     
     Server server = new Server();
     
-    boolean useHttp = null != properties.getProperty(Configuration.PLASMA_FRONTEND_PORT);
-    boolean useHttps = null != properties.getProperty(Configuration.PLASMA_FRONTEND_PREFIX + Configuration._SSL_PORT);
-    int tcpBacklog = Integer.valueOf(properties.getProperty(Configuration.PLASMA_FRONTEND_TCP_BACKLOG, "0"));
-    
+    boolean useHttp = null != properties.getProperty(Configuration.PLASMA_FRONTEND_PREFIX + Configuration._PORT);
+    boolean useHttps = null != properties.getProperty(Configuration.PLASMA_FRONTEND_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT);
+
     List<ServerConnector> connectors = new ArrayList<ServerConnector>();
     
     if (useHttp) {
-      ServerConnector connector = new ServerConnector(server, Integer.parseInt(properties.getProperty(Configuration.PLASMA_FRONTEND_ACCEPTORS)), Integer.parseInt(properties.getProperty(Configuration.PLASMA_FRONTEND_SELECTORS)));
-      connector.setIdleTimeout(Long.parseLong(properties.getProperty(Configuration.PLASMA_FRONTEND_IDLE_TIMEOUT)));    
-      connector.setPort(Integer.parseInt(properties.getProperty(Configuration.PLASMA_FRONTEND_PORT)));
-      connector.setHost(properties.getProperty(Configuration.PLASMA_FRONTEND_HOST));
-      connector.setAcceptQueueSize(tcpBacklog);
+      ServerConnector connector = HTTPUtils.getConnector(server, Configuration.PLASMA_FRONTEND_PREFIX, false);
       connector.setName("Continuum Plasma Front End HTTP");
 
       connectors.add(connector);
     }
     
     if (useHttps) {
-      ServerConnector connector = SSLUtils.getConnector(server, Configuration.PLASMA_FRONTEND_PREFIX);
+      ServerConnector connector = HTTPUtils.getConnector(server, Configuration.PLASMA_FRONTEND_PREFIX, true);
       connector.setName("Continuum Plasma Front End HTTPS");
       connectors.add(connector);
     }

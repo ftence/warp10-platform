@@ -695,39 +695,9 @@ public class Configuration {
   public static final String INGRESS_STORE_METADATA_INCLUDE = "ingress.store.metadata.include";
 
   /**
-   * Host onto which the ingress server should listen
-   */
-  public static final String INGRESS_HOST = "ingress.host";
-  
-  /**
-   * Port onto which the ingress server should listen
-   */
-  public static final String INGRESS_PORT = "ingress.port";
-  
-  /**
-   * TCP Backlog applied to the ingress server listener
-   */
-  public static final String INGRESS_TCP_BACKLOG = "ingress.tcp.backlog";
-
-  /**
    * Size of metadata cache in number of entries
    */
   public static final String INGRESS_METADATA_CACHE_SIZE = "ingress.metadata.cache.size";
-  
-  /**
-   * Number of acceptors
-   */
-  public static final String INGRESS_ACCEPTORS = "ingress.acceptors";
-  
-  /**
-   * Number of selectors
-   */
-  public static final String INGRESS_SELECTORS = "ingress.selectors";
-  
-  /**
-   * Idle timeout
-   */
-  public static final String INGRESS_IDLE_TIMEOUT = "ingress.idle.timeout";
   
   /**
    * Number of threads in Jetty's Thread Pool
@@ -1135,41 +1105,11 @@ public class Configuration {
    * Maximum size of each znode (in bytes)
    */
   public static final String PLASMA_FRONTEND_MAXZNODESIZE = "plasma.frontend.maxznodesize";
-  
-  /**
-   * Host/IP on which to bind
-   */
-  public static final String PLASMA_FRONTEND_HOST = "plasma.frontend.host";
-  
-  /**
-   * Port on which to listen
-   */
-  public static final String PLASMA_FRONTEND_PORT = "plasma.frontend.port";
-
-  /**
-   * TCP Backlog applied to the Plasma listener
-   */
-  public static final String PLASMA_FRONTEND_TCP_BACKLOG = "plasma.frontend.tcp.backlog";
-
-  /**
-   * Number of acceptors
-   */
-  public static final String PLASMA_FRONTEND_ACCEPTORS = "plasma.frontend.acceptors";
-
-  /**
-   * Number of selectors
-   */
-  public static final String PLASMA_FRONTEND_SELECTORS = "plasma.frontend.selectors";
 
   /**
    * Max message size for the Plasma Frontend Websocket
    */
   public static final String PLASMA_FRONTEND_WEBSOCKET_MAXMESSAGESIZE = "plasma.frontend.websocket.maxmessagesize";
-  
-  /**
-   * Idle timeout
-   */
-  public static final String PLASMA_FRONTEND_IDLE_TIMEOUT = "plasma.frontend.idle.timout";
   
   /**
    * SipHash key for computing MACs of Kafka messages
@@ -1466,36 +1406,6 @@ public class Configuration {
   public static final String STANDALONE_SPLITS_ENABLE = "standalone.splits.enable";
   
   /**
-   * IP to bind to for listening to incoming connections. Use 0.0.0.0 to listen to all interfaces
-   */
-  public static final String STANDALONE_HOST = "standalone.host";
-
-  /**
-   * Port to bind to for listening to incoming connections.
-   */
-  public static final String STANDALONE_PORT = "standalone.port";
-
-  /**
-   * TCP Backlog applied to incoming connections listener.
-   */
-  public static final String STANDALONE_TCP_BACKLOG = "standalone.tcp.backlog";
-
-  /**
-   * Number of Jetty acceptors
-   */
-  public static final String STANDALONE_ACCEPTORS = "standalone.acceptors";
-
-  /**
-   * Idle timeout
-   */
-  public static final String STANDALONE_IDLE_TIMEOUT = "standalone.idle.timeout";
-  
-  /**
-   * Number of Jetty selectors
-   */
-  public static final String STANDALONE_SELECTORS = "standalone.selectors";
-
-  /**
    * Maximum encoder size (in bytes) for internal data transfers. Use values from 64k to 512k
    */
   public static final String STANDALONE_MAX_ENCODER_SIZE = "standalone.max.encoder.size";
@@ -1788,36 +1698,6 @@ public class Configuration {
    * The listed keys will be extracted from 'egress.' prefixed configuration keys.
    */
   public static final String EGRESS_HBASE_CONFIG = "egress.hbase.config";
-
-  /**
-   * Port onto which the egress server should listen
-   */
-  public static final String EGRESS_PORT = "egress.port";
-
-  /**
-   * TCP Backlog applied to the egress server listener
-   */
-  public static final String EGRESS_TCP_BACKLOG = "egress.tcp.backlog";
-
-  /**
-   * Host onto which the egress server should listen
-   */
-  public static final String EGRESS_HOST = "egress.host";
-  
-  /**
-   * Number of acceptors
-   */
-  public static final String EGRESS_ACCEPTORS = "egress.acceptors";
-  
-  /**
-   * Number of selectors
-   */
-  public static final String EGRESS_SELECTORS = "egress.selectors";
-  
-  /**
-   * Idle timeout
-   */
-  public static final String EGRESS_IDLE_TIMEOUT = "egress.idle.timeout";
   
   /**
    * ZooKeeper server list
@@ -2211,29 +2091,42 @@ public class Configuration {
   public static final String HTTP_HEADER_EXPOSE_HEADERS = "http.header.exposeheaders";
 
   /**
-   * SSL Port
+   * The postfix of the prefix indicating the configuration is for SSL connections.
+   * Example ingress.ssl.port: ingress as prefix, .ssl is this middlefix and port is the postfix.
    */
-  public static final String _SSL_PORT = ".ssl.port";
+  public static final String _SSL_MIDDLEFIX = ".ssl";
 
   /**
-   * SSL TCP Backlog
+   * HTTP(S) Host.
+   * IP to bind to for listening to incoming connections. Use 0.0.0.0 to listen to all interfaces.
    */
-  public static final String _SSL_TCP_BACKLOG = ".ssl.tcp.backlog";
+  public static final String _HOST = ".host";
 
   /**
-   * SSL Host
+   * HTTP(S) Port.
+   * Port to bind to for listening to incoming connections.
    */
-  public static final String _SSL_HOST = ".ssl.host";
+  public static final String _PORT = ".port";
 
   /**
-   * SSL Acceptors
+   * Number of HTTP(S) Jetty acceptors threads
    */
-  public static final String _SSL_ACCEPTORS = ".ssl.acceptors";
+  public static final String _ACCEPTORS = ".acceptors";
   
   /**
-   * SSL Selectors
+   * Number of HTTP(S) Jetty selectors threads
    */
-  public static final String _SSL_SELECTORS = ".ssl.selectors";
+  public static final String _SELECTORS = ".selectors";
+
+  /**
+   * HTTP(S) Idle timeout
+   */
+  public static final String _IDLE_TIMEOUT = ".idle.timeout";
+
+  /**
+   * HTTP(S) TCP Backlog applied to incoming connections listener.
+   */
+  public static final String _TCP_BACKLOG = ".tcp.backlog";
 
   /**
    * SSL KeyStore path
@@ -2254,21 +2147,39 @@ public class Configuration {
    * SSL KeyManager password
    */
   public static final String _SSL_KEYMANAGER_PASSWORD = ".ssl.keymanager.password";
+  
+  //
+  // Prefixes for the HTTP(S) configs
+  //
 
   /**
-   * SSL Idle timeout
+   * Prefix to standalone.host, standalone.port, standalone.acceptors, standalone.selectors, standalone.idle.timeout
+   * and the ssl variants standalone.ssl.host, standalone.ssl.port, standalone.ssl.acceptors, standalone.ssl.selectors, standalone.ssl.idle.timeout
+   * See the postfix comments for details
    */
-  public static final String _SSL_IDLE_TIMEOUT = ".ssl.idle.timeout";
-  
-  //
-  // Prefixes for the SSL configs
-  //
-  
   public static final String STANDALONE_PREFIX = "standalone";
+
+   /**
+    * Prefix to egress.host, egress.port, egress.acceptors, egress.selectors, egress.idle.timeout
+    * and the ssl variants egress.ssl.host, egress.ssl.port, egress.ssl.acceptors, egress.ssl.selectors, egress.ssl.idle.timeout
+    * See the postfix comments for details
+    */
   public static final String EGRESS_PREFIX = "egress";
+
+   /**
+    * Prefix to ingress.host, ingress.port, ingress.acceptors, ingress.selectors, ingress.idle.timeout
+    * and the ssl variants ingress.ssl.host, ingress.ssl.port, ingress.ssl.acceptors, ingress.ssl.selectors, ingress.ssl.idle.timeout
+    * See the postfix comments for details
+    */
   public static final String INGRESS_PREFIX = "ingress";
+
+   /**
+    * Prefix to plasma.frontend.host, plasma.frontend.port, plasma.frontend.acceptors, plasma.frontend.selectors, plasma.frontend.idle.timeout
+    * and the ssl variants plasma.frontend.ssl.host, plasma.frontend.ssl.port, plasma.frontend.ssl.acceptors, plasma.frontend.ssl.selectors, standalone.ssl.idle.timeout
+    * See the postfix comments for details
+    */
   public static final String PLASMA_FRONTEND_PREFIX = "plasma.frontend";
-  
+
   //
   // Hadoop Integration Configurations
   //

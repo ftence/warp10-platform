@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,8 +38,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
-import org.fusesource.leveldbjni.JniDBFactory;
 import org.iq80.leveldb.CompressionType;
 import org.iq80.leveldb.Options;
 
@@ -48,7 +45,7 @@ import com.google.common.base.Preconditions;
 
 import io.warp10.Revision;
 import io.warp10.WarpConfig;
-import io.warp10.SSLUtils;
+import io.warp10.HTTPUtils;
 import io.warp10.WarpDist;
 import io.warp10.continuum.Configuration;
 import io.warp10.continuum.JettyUtil;
@@ -76,20 +73,13 @@ import io.warp10.warp.sdk.AbstractWarp10Plugin;
 
 public class Warp extends WarpDist implements Runnable {
 
-  private static final String DEFAULT_HTTP_ACCEPTORS = "2";
-  private static final String DEFAULT_HTTP_SELECTORS = "4";
-  
   private static final String NULL = "null";
         
   private static WarpDB db;
   
   private static boolean standaloneMode = false;
   
-  private static int port;
-  
-  private static String host;
-  
-  private static Set<Path> datalogSrcDirs = Collections.unmodifiableSet(new HashSet<Path>()); 
+  private static Set<Path> datalogSrcDirs = Collections.unmodifiableSet(new HashSet<Path>());
   
   private static final String[] REQUIRED_PROPERTIES = {
     Configuration.INGRESS_WEBSOCKET_MAXMESSAGESIZE,
@@ -280,47 +270,26 @@ public class Warp extends WarpDist implements Runnable {
     
     Server server = new Server();
 
-    boolean useHTTPS = null != properties.getProperty(Configuration.STANDALONE_PREFIX + Configuration._SSL_PORT);
-    boolean useHTTP = null != properties.getProperty(Configuration.STANDALONE_PORT);
+    boolean useHTTPS = null != properties.getProperty(Configuration.STANDALONE_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT);
+    boolean useHTTP = null != properties.getProperty(Configuration.STANDALONE_PREFIX + Configuration._PORT);
     
     ServerConnector httpConnector = null;
     ServerConnector httpsConnector = null;
-    
+
     if (!useHTTPS && !useHTTP ) {
-      throw new RuntimeException("Missing '" + Configuration.STANDALONE_PORT + "' or '" + Configuration.STANDALONE_PREFIX + Configuration._SSL_PORT + "' configuration");
+      throw new RuntimeException("Missing '" + Configuration.STANDALONE_PREFIX + Configuration._PORT + "' or '" + Configuration.STANDALONE_PREFIX + Configuration._SSL_MIDDLEFIX + Configuration._PORT + "' configuration");
     }
     
     List<Connector> connectors = new ArrayList<Connector>();
     
     if (useHTTP) {
-      int acceptors = Integer.valueOf(properties.getProperty(Configuration.STANDALONE_ACCEPTORS, DEFAULT_HTTP_ACCEPTORS));
-      int selectors = Integer.valueOf(properties.getProperty(Configuration.STANDALONE_SELECTORS, DEFAULT_HTTP_SELECTORS));
-      port = Integer.valueOf(properties.getProperty(Configuration.STANDALONE_PORT));
-      host = properties.getProperty(Configuration.STANDALONE_HOST, "0.0.0.0");
-      int tcpBacklog = Integer.valueOf(properties.getProperty(Configuration.STANDALONE_TCP_BACKLOG, "0"));
-      
-      httpConnector = new ServerConnector(server, acceptors, selectors);
-      
-      httpConnector.setPort(port);
-      httpConnector.setAcceptQueueSize(tcpBacklog);
-      
-      if (null != host) {
-        httpConnector.setHost(host);
-      }
-      
-      String idle = properties.getProperty(Configuration.STANDALONE_IDLE_TIMEOUT);
-      
-      if (null != idle) {
-        httpConnector.setIdleTimeout(Long.parseLong(idle));
-      }
-      
+      httpConnector = HTTPUtils.getConnector(server, Configuration.STANDALONE_PREFIX, false);
       httpConnector.setName("Warp 10 Standalone HTTP Endpoint");
-      
       connectors.add(httpConnector);
     }
 
     if (useHTTPS) {
-      httpsConnector = SSLUtils.getConnector(server, Configuration.STANDALONE_PREFIX);
+      httpsConnector = HTTPUtils.getConnector(server, Configuration.STANDALONE_PREFIX, true);
       httpsConnector.setName("Warp 10 Standalone HTTPS Endpoint");      
       connectors.add(httpsConnector);
     }
@@ -525,7 +494,7 @@ public class Warp extends WarpDist implements Runnable {
 
     try {
       if (useHTTP) {
-        System.out.println("#### standalone.endpoint " + InetAddress.getByName(host) + ":" + port);
+        System.out.println("#### standalone.endpoint " + InetAddress.getByName(httpConnector.getHost()) + ":" + httpConnector.getPort());
       }
       if (useHTTPS) {
         System.out.println("#### standalone.ssl.endpoint " + InetAddress.getByName(httpsConnector.getHost()) + ":" + httpsConnector.getPort());
@@ -536,11 +505,6 @@ public class Warp extends WarpDist implements Runnable {
       throw new RuntimeException(e);
     }
     
-    // Retrieve actual local port
-    if (null != httpConnector) {
-      port = httpConnector.getLocalPort();
-    }
-
     WarpDist.setInitialized(true);
     
     try {
@@ -558,14 +522,6 @@ public class Warp extends WarpDist implements Runnable {
   
   public static boolean isStandaloneMode() {
     return standaloneMode;
-  }
-  
-  public static int getPort() {
-    return port;
-  }
-  
-  public static String getHost() {
-    return host;
   }
   
   @Override
