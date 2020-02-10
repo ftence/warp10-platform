@@ -1857,7 +1857,7 @@ public class WarpScriptLib {
     addNamedWarpScriptFunction(new MapperKernelUniform("mapper.kernel.uniform"));
 
     addNamedWarpScriptFunction(new Percentile.Builder("mapper.percentile", false));
-    addNamedWarpScriptFunction(new Percentile.Builder("mapper.percentile.forbid-nulls", true));
+    addNamedWarpScriptFunction(new Percentile.Builder("mapper.percentile.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
 
     //functions.put("mapper.abscissa", new MapperSAX.Builder());
     
@@ -2218,28 +2218,28 @@ public class WarpScriptLib {
     addNamedWarpScriptFunction(new Max("bucketizer.max", true));
     addNamedWarpScriptFunction(new Mean("bucketizer.mean", false));
     addNamedWarpScriptFunction(new Median("bucketizer.median", false));
-    addNamedWarpScriptFunction(new Median("bucketizer.median.forbid-nulls", true));
+    addNamedWarpScriptFunction(new Median("bucketizer.median.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new MAD("bucketizer.mad"));
     addNamedWarpScriptFunction(new Or("bucketizer.or", false));
     addNamedWarpScriptFunction(new Sum("bucketizer.sum", true));
     addNamedWarpScriptFunction(new Join.Builder("bucketizer.join", true, false, null));
     addNamedWarpScriptFunction(new Count("bucketizer.count", false));
     addNamedWarpScriptFunction(new Percentile.Builder("bucketizer.percentile", false));
-    addNamedWarpScriptFunction(new Percentile.Builder("bucketizer.percentile.forbid-nulls", true));
+    addNamedWarpScriptFunction(new Percentile.Builder("bucketizer.percentile.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
 
-    addNamedWarpScriptFunction(new Min("bucketizer.min.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Max("bucketizer.max.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Mean("bucketizer.mean.exclude-nulls", true));
-    addNamedWarpScriptFunction(new Sum("bucketizer.sum.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Join.Builder("bucketizer.join.forbid-nulls", false, false, null));
-    addNamedWarpScriptFunction(new Count("bucketizer.count.exclude-nulls", true));
-    addNamedWarpScriptFunction(new Count("bucketizer.count.include-nulls", false));
+    addNamedWarpScriptFunction(new Min("bucketizer.min.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Max("bucketizer.max.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Mean("bucketizer.mean.exclude-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Sum("bucketizer.sum.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Join.Builder("bucketizer.join.forbid-nulls", false, false, null)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Count("bucketizer.count.exclude-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Count("bucketizer.count.include-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new Count("bucketizer.count.nonnull", true));
     addNamedWarpScriptFunction(new CircularMean.Builder("bucketizer.mean.circular", true));
-    addNamedWarpScriptFunction(new CircularMean.Builder("bucketizer.mean.circular.exclude-nulls", false));
+    addNamedWarpScriptFunction(new CircularMean.Builder("bucketizer.mean.circular.exclude-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new RMS("bucketizer.rms", false));
     addNamedWarpScriptFunction(new StandardDeviation.Builder("bucketizer.sd", false));
-    addNamedWarpScriptFunction(new StandardDeviation.Builder("bucketizer.sd.forbid-nulls", true));
+    addNamedWarpScriptFunction(new StandardDeviation.Builder("bucketizer.sd.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
 
     //
     // Mappers
@@ -2253,7 +2253,7 @@ public class WarpScriptLib {
     addNamedWarpScriptFunction(new Max(MAPPER_MAX, true));
     addNamedWarpScriptFunction(new Mean("mapper.mean", false));
     addNamedWarpScriptFunction(new Median("mapper.median", false));
-    addNamedWarpScriptFunction(new Median("mapper.median.forbid-nulls", true));
+    addNamedWarpScriptFunction(new Median("mapper.median.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new MAD("mapper.mad"));
     addNamedWarpScriptFunction(new Or("mapper.or", false));
     addNamedWarpScriptFunction(new Highest(MAPPER_HIGHEST));
@@ -2282,18 +2282,18 @@ public class WarpScriptLib {
     addNamedWarpScriptFunction(new MapperSigmoid("mapper.sigmoid"));
     addNamedWarpScriptFunction(new MapperProduct("mapper.product"));
     addNamedWarpScriptFunction(new MapperGeoClearPosition("mapper.geo.clear"));
-    addNamedWarpScriptFunction(new Count("mapper.count.exclude-nulls", true));
-    addNamedWarpScriptFunction(new Count("mapper.count.include-nulls", false));
+    addNamedWarpScriptFunction(new Count("mapper.count.exclude-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Count("mapper.count.include-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new Count("mapper.count.nonnull", true));
-    addNamedWarpScriptFunction(new Min("mapper.min.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Max("mapper.max.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Mean("mapper.mean.exclude-nulls", true));
-    addNamedWarpScriptFunction(new Sum("mapper.sum.forbid-nulls", false));
-    addNamedWarpScriptFunction(new Join.Builder("mapper.join.forbid-nulls", false, false, null));
-    addNamedWarpScriptFunction(new Variance.Builder("mapper.var.forbid-nulls", true));
-    addNamedWarpScriptFunction(new StandardDeviation.Builder("mapper.sd.forbid-nulls", true));
+    addNamedWarpScriptFunction(new Min("mapper.min.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Max("mapper.max.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Mean("mapper.mean.exclude-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Sum("mapper.sum.forbid-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Join.Builder("mapper.join.forbid-nulls", false, false, null)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new Variance.Builder("mapper.var.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
+    addNamedWarpScriptFunction(new StandardDeviation.Builder("mapper.sd.forbid-nulls", true)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new CircularMean.Builder("mapper.mean.circular", true));
-    addNamedWarpScriptFunction(new CircularMean.Builder("mapper.mean.circular.exclude-nulls", false));
+    addNamedWarpScriptFunction(new CircularMean.Builder("mapper.mean.circular.exclude-nulls", false)); // TODO(tce) To be removed, MAP/BUCKETIZE does not provide nulls to its aggregator
     addNamedWarpScriptFunction(new MapperMod.Builder("mapper.mod"));
     addNamedWarpScriptFunction(new RMS("mapper.rms", false));
 
