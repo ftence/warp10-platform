@@ -228,8 +228,7 @@ public class Warp10InputFormat extends InputFormat<Text, BytesWritable> {
     
     URL url = new URL(sb.toString());
 
-    LOG.info("Get splits from: " + splitEndpoint);
-
+    LOG.info("Get splits from: {}", splitEndpoint);
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
     conn.setConnectTimeout(connectTimeout);
@@ -368,8 +367,7 @@ public class Warp10InputFormat extends InputFormat<Text, BytesWritable> {
 
     }
 
-    LOG.info("Number of splits: " + splits.size());
-
+    LOG.info("Number of splits: {}", splits.size());
     return splits;
 
 //    //

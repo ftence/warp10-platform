@@ -628,7 +628,7 @@ public class Directory extends AbstractHandler implements DirectoryService.Iface
                 
                 // If classId/labelsId are incoherent, skip metadata
                 if (classId != hbClassId || labelsId != hbLabelsId) {
-                  LOG.warn("Incoherent class/labels Id for " + metadata);
+                  LOG.warn("Incoherent class/labels Id for {}", metadata);
                   continue;
                 }
           
@@ -722,7 +722,7 @@ public class Directory extends AbstractHandler implements DirectoryService.Iface
                     metadatas.get(metadata.getName()).put(labelsId, metadata);
                     continue;
                   } else if (!metadatas.get(metadata.getName()).get(labelsId).getLabels().equals(metadata.getLabels())) {
-                    LOG.warn("LabelsId collision under class '" + metadata.getName() + "' " + metadata.getLabels() + " and " + metadatas.get(metadata.getName()).get(labelsId).getLabels());
+                    LOG.warn("LabelsId collision under class '{}' {} and {}", metadata.getName(), metadata.getLabels(), metadatas.get(metadata.getName()).get(labelsId).getLabels());
                     Sensision.update(SensisionConstants.CLASS_WARP_DIRECTORY_LABELS_COLLISIONS, Sensision.EMPTY_LABELS, 1);                    
                   }
                 }
@@ -853,7 +853,7 @@ public class Directory extends AbstractHandler implements DirectoryService.Iface
           
           nano = System.nanoTime() - nano;
           
-          LOG.info("Loaded " + count + " GTS in " + (nano / 1000000.0D) + " ms");
+          LOG.info("Loaded {} GTS in {} ms", count, nano / 1000000.0D);
         }            
       });
       
@@ -1126,7 +1126,7 @@ public class Directory extends AbstractHandler implements DirectoryService.Iface
     long nano = System.nanoTime();
     Runtime.getRuntime().gc();
     nano = System.nanoTime() - nano;
-    LOG.info("GC performed in " + (nano / 1000000.0D) + " ms.");
+    LOG.info("GC performed in {} ms.", nano / 1000000.0D);
         
     this.fullyInitialized.set(true);
     
@@ -2803,7 +2803,7 @@ public class Directory extends AbstractHandler implements DirectoryService.Iface
       
       String eventstr = LogUtil.serializeLoggingEvent(this.keystore, event);
       
-      LOG.info("Search returned " + count + " results in " + ((nownano - nano) / 1000000.0D) + " ms, inspected " + metadataInspected + " metadatas in " + classesInspected + " classes (" + classesMatched + " matched) and performed " + labelsComparisons + " comparisons. EVENT=" + eventstr);
+      LOG.info("Search returned {} results in {} ms, inspected {} metadatas in {} classes ({} matched) and performed {} comparisons. EVENT={}", count, (nownano - nano) / 1000000.0D, metadataInspected, classesInspected, classesMatched, labelsComparisons, eventstr);
     }
     
     Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_DIRECTORY_STREAMING_REQUESTS, Sensision.EMPTY_LABELS, 1);

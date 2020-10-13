@@ -2345,7 +2345,7 @@ public class Ingress extends AbstractHandler implements Runnable {
     
     nano = System.nanoTime() - nano;
     
-    LOG.info("Dumped " + count + " cache entries in " + (nano / 1000000.0D) + " ms.");    
+    LOG.info("Dumped {} cache entries in {} ms.", count, nano / 1000000.0D);
   }
   
   private void loadCache() {
@@ -2420,6 +2420,6 @@ public class Ingress extends AbstractHandler implements Runnable {
     
     nano = System.nanoTime() - nano;
     
-    LOG.info("Loaded " + count + " cache entries in " + (nano / 1000000.0D) + " ms.");
+    LOG.info("Loaded {} cache entries in {} ms.", count, nano / 1000000.0D);
   }
 }

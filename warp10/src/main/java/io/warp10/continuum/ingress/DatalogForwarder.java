@@ -608,7 +608,7 @@ public class DatalogForwarder extends Thread {
     
     if (null != name) {
       suffix = "." + name;
-      LOG.info("Initializing datalog forwarder '" + name + "'.");
+      LOG.info("Initializing datalog forwarder '{}'.", name);
     } else {
       LOG.info("Initializing datalog forwarder.");
     }
@@ -839,12 +839,12 @@ public class DatalogForwarder extends Thread {
         //
         
         if (ts != dr.getTimestamp()) {
-          LOG.error("Datalog Request '" + action.file + "' has a timestamp which differs from that of its file, timestamp is 0x" + Long.toHexString(dr.getTimestamp()));
+          LOG.error("Datalog Request '{}' has a timestamp which differs from that of its file, timestamp is 0x{}", action.file, Long.toHexString(dr.getTimestamp()));
           break;
         }
         
         if (!id.equals(dr.getId())) {
-          LOG.error("Datalog Request '" + action.file + "' has an id which differs from that of its file, id is " + dr.getId());
+          LOG.error("Datalog Request '{}' has an id which differs from that of its file, id is {}", action.file, dr.getId());
           break;          
         }
         

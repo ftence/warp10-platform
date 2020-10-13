@@ -119,7 +119,7 @@ public abstract class AbstractWarp10Plugin {
         URL url = AbstractWarp10Plugin.class.getResource('/' + plugin.replace('.', '/') + ".class");
         
         if (null == url) {
-          LOG.error("Unable to load plugin '" + plugin + "', make sure it is in the class path.");
+          LOG.error("Unable to load plugin '{}', make sure it is in the class path.", plugin);
           failedPlugin = true;
           failed.add(plugin);
           continue;
@@ -151,7 +151,7 @@ public abstract class AbstractWarp10Plugin {
 
         AbstractWarp10Plugin wse = (AbstractWarp10Plugin) cls.newInstance();          
         wse.init(WarpConfig.getProperties());
-        LOG.info("LOADED plugin '" + plugin  + "'");
+        LOG.info("LOADED plugin '{}'", plugin);
         plugins.add(plugin);
       } catch (Exception e) {
         throw new RuntimeException(e);

@@ -246,7 +246,7 @@ public class StandaloneDirectoryClient implements DirectoryClient {
               
               // If classId/labelsId are incoherent, skip metadata
               if (classId != hbClassId || labelsId != hbLabelsId) {
-                LOG.error("Incoherent class/labels Id for " + metadata);
+                LOG.error("Incoherent class/labels Id for {}", metadata);
                 continue;
               }
 
@@ -288,7 +288,7 @@ public class StandaloneDirectoryClient implements DirectoryClient {
                 }
               }
               
-              LOG.error("Duplicate labelsId for classId " + classId + ": " + metadata);
+              LOG.error("Duplicate labelsId for classId {}: {}", classId, metadata);
               continue;
               
             } catch (InvalidCipherTextException icte) {
@@ -353,7 +353,7 @@ public class StandaloneDirectoryClient implements DirectoryClient {
       
       nano = System.nanoTime() - nano;
       
-      LOG.info("Loaded " + count + " GTS in " + (nano / 1000000.0D) + " ms");
+      LOG.info("Loaded {} GTS in {} ms", count, nano / 1000000.0D);
     } finally {
       Sensision.set(SensisionConstants.SENSISION_CLASS_CONTINUUM_DIRECTORY_GTS, Sensision.EMPTY_LABELS, count);
       try {
@@ -617,7 +617,7 @@ public class StandaloneDirectoryClient implements DirectoryClient {
       } else {
         // Check that we do not have a collision
         if (!metadatas.get(metadata.getName()).get(labelsId).getLabels().equals(metadata.getLabels())) {
-          LOG.warn("LabelsId collision under class '" + metadata.getName() + "' " + metadata.getLabels() + " and " + metadatas.get(metadata.getName()).get(labelsId).getLabels());
+          LOG.warn("LabelsId collision under class '{}' {} and {}", metadata.getName(), metadata.getLabels(), metadatas.get(metadata.getName()).get(labelsId).getLabels());
           Sensision.update(SensisionConstants.CLASS_WARP_DIRECTORY_LABELS_COLLISIONS, Sensision.EMPTY_LABELS, 1);
         }
 

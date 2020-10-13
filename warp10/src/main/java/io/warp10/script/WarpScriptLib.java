@@ -2478,7 +2478,7 @@ public class WarpScriptLib {
         URL url = WarpScriptLib.class.getResource('/' + extension.replace('.', '/') + ".class");
         
         if (null == url) {
-          LOG.error("Unable to load extension '" + extension + "', make sure it is in the class path.");
+          LOG.error("Unable to load extension '{}', make sure it is in the class path.", extension);
           failedExt.add(extension);
           continue;
         }
@@ -2514,9 +2514,9 @@ public class WarpScriptLib {
         String namespace = props.getProperty(Configuration.CONFIG_WARPSCRIPT_NAMESPACE_PREFIX + wse.getClass().getName(), "").trim(); 
         if (!"".equals(namespace)) {
           namespace = WarpURLDecoder.decode(namespace, StandardCharsets.UTF_8);
-          LOG.info("LOADED extension '" + extension + "'" + " under namespace '" + namespace + "'.");
+          LOG.info("LOADED extension '{}' under namespace '{}'.", extension, namespace);
         } else {
-          LOG.info("LOADED extension '" + extension + "'");
+          LOG.info("LOADED extension '{}'", extension);
         }
       } catch (Exception e) {
         throw new RuntimeException(e);

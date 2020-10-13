@@ -194,7 +194,7 @@ public class EgressInteractiveHandler extends WebSocketHandler.Simple implements
           PrintWriter pw = new PrintWriter(new OutputStreamWriter(connectionSocket.getOutputStream()));
           pw.println("// Maximum server capacity is reached (" + this.capacity + ").");
           pw.flush();
-          LOG.error("Maximum server capacity is reached (" + this.capacity + ").");
+          LOG.error("Maximum server capacity is reached ({}).", this.capacity);
           connectionSocket.close();
           continue;
         }

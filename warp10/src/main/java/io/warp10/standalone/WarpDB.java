@@ -443,13 +443,13 @@ public class WarpDB extends Thread implements DB {
       
       int pending = pendingOps.get();
       
-      LOG.info("Waiting for " + pendingOps.get() + " pending ops to finish.");      
+      LOG.info("Waiting for {} pending ops to finish.", pendingOps.get());
       
       while(pendingOps.get() > 0 || compactionsSuspended.get()) {
         if (pendingOps.get() != pending) {
           pending = pendingOps.get();
           if (pending > 0) {
-            LOG.info("Waiting for " + pendingOps.get() + " pending ops to finish.");
+            LOG.info("Waiting for {} pending ops to finish.", pendingOps.get());
           } else {
             continue;
           }
@@ -511,7 +511,7 @@ public class WarpDB extends Thread implements DB {
                   
          Thread owner = mutex.getOwner();
          if (null != owner && !owner.isAlive()) {
-           LOG.warn("WarpDB mutex holder is no longer alive, " + mutex.getHoldCount() + " holds, " + mutex.getQueueLength() + " threads waiting WarpDB.");
+           LOG.warn("WarpDB mutex holder is no longer alive, {} holds, {} threads waiting WarpDB.", mutex.getHoldCount(), mutex.getQueueLength());
          }
          
          if (null == command) {

@@ -743,7 +743,7 @@ public class StandaloneMemoryStore extends Thread implements StoreClient {
 
     nano = System.nanoTime() - nano;
 
-    LOG.info("Dumped " + gts + " GTS (" + bytes + " bytes) in " + (nano / 1000000.0D) + " ms.");
+    LOG.info("Dumped {} GTS ({} bytes) in {} ms.", gts, bytes, nano / 1000000.0D);
   }
 
   public void load() {
@@ -805,7 +805,7 @@ public class StandaloneMemoryStore extends Thread implements StoreClient {
         }
       }
     } catch (FileNotFoundException fnfe) {
-      LOG.error("File '" + path + "' was not found, skipping.");
+      LOG.error("File '{}' was not found, skipping.", path);
       return;
     } catch (IOException ioe) {
       throw ioe;
@@ -817,7 +817,7 @@ public class StandaloneMemoryStore extends Thread implements StoreClient {
 
     nano = System.nanoTime() - nano;
 
-    LOG.info("Loaded " + gts + " GTS (" + bytes + " bytes) in " + (nano / 1000000.0D) + " ms.");
+    LOG.info("Loaded {} GTS ({} bytes) in {} ms.", gts, bytes, nano / 1000000.0D);
   }
 
   public void setDirectoryClient(StandaloneDirectoryClient directoryClient) {

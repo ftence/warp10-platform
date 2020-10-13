@@ -515,10 +515,10 @@ public class Warp extends WarpDist implements Runnable {
 
     try {
       if (useHTTP) {
-        LOG.info("#### standalone.endpoint " + InetAddress.getByName(host) + ":" + port);
+        LOG.info("#### standalone.endpoint {}:{}", InetAddress.getByName(host), port);
       }
       if (useHTTPS) {
-        LOG.info("#### standalone.ssl.endpoint " + InetAddress.getByName(httpsConnector.getHost()) + ":" + httpsConnector.getPort());
+        LOG.info("#### standalone.ssl.endpoint {}:{}", InetAddress.getByName(httpsConnector.getHost()), httpsConnector.getPort());
       }
       server.start();
     } catch (Exception e) {

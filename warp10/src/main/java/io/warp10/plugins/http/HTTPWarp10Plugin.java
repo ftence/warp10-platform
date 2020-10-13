@@ -203,7 +203,7 @@ public class HTTPWarp10Plugin extends AbstractWarp10Plugin implements Runnable {
               })
               .iterator();
         } catch (NoSuchFileException nsfe) {
-          LOG.warn("HTTP plugin could not find directory " + dir);
+          LOG.warn("HTTP plugin could not find directory {}", dir);
         }
 
         Set<String> specs = new HashSet<String>();

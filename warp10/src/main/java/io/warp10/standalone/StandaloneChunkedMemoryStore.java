@@ -672,19 +672,19 @@ public class StandaloneChunkedMemoryStore extends Thread implements StoreClient 
         }
       }
     } catch (FileNotFoundException fnfe) {
-      LOG.error("File '" + path + "' was not found, skipping.");
+      LOG.error("File '{}' was not found, skipping.", path);
       return;
     } catch (IOException ioe) {
       if (!failsafe) {
         throw ioe;
       } else {
-        LOG.error("Ignoring exception " + ioe.getMessage() + ".");
+        LOG.error("Ignoring exception {}.", ioe.getMessage());
       }
     } catch (Exception e) {
       if (!failsafe) {
         throw new IOException(e);
       } else {
-        LOG.error("Ignoring exception " + e.getMessage() + ".");
+        LOG.error("Ignoring exception {}.", e.getMessage());
       }
     }
 

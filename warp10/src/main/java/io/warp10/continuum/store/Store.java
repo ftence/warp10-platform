@@ -472,7 +472,7 @@ public class Store extends Thread {
                   //
                   Sensision.update(SensisionConstants.CLASS_WARP_STORE_KAFKA_COMMITS_OVERDUE, Sensision.EMPTY_LABELS, 1);
                   if (LOG.isDebugEnabled()) {
-                    LOG.debug("Last Kafka commit was more than " + maxTimeBetweenCommits + " ms ago, aborting.");
+                    LOG.debug("Last Kafka commit was more than {} ms ago, aborting.", maxTimeBetweenCommits);
                   }
                   for (int i = 0; i < consumers.length; i++) {
                     consumers[i].setHBaseReset(true);
@@ -616,13 +616,13 @@ public class Store extends Thread {
             loop++;
             
             if (0 == loop % 10) {
-              LOG.info("Still waiting for HBase connection to be closed... " + ((System.nanoTime() - nano) / 1000000.0D) + " ms elapsed.");
+              LOG.info("Still waiting for HBase connection to be closed... {} ms elapsed.", (System.nanoTime() - nano) / 1000000.0D);
             }
           }
           
           nano = System.nanoTime() - nano;
           
-          LOG.info("HBase connection closed after " + (nano / 1000000.0D) + " ms.");
+          LOG.info("HBase connection closed after {} ms.", nano / 1000000.0D);
         } catch (Exception e) {        
         }        
       }
@@ -821,7 +821,7 @@ public class Store extends Thread {
                     long nanos = System.nanoTime();
                     if (!store.SKIP_WRITE) {
                       if (LOG.isDebugEnabled()) {
-                        LOG.debug("HBase batch of " + puts.size() + " Puts.");
+                        LOG.debug("HBase batch of {} Puts.", puts.size());
                       }
                       //
                       // TODO(hbs): consider switching to streaming Puts???, i.e. setAutoFlush(false), then series of
@@ -845,7 +845,7 @@ public class Store extends Thread {
                     putsSize.set(0L);
                     nanos = System.nanoTime() - nanos;
                     if (LOG.isDebugEnabled()) {
-                      LOG.debug("HBase batch took " + nanos + " ns.");
+                      LOG.debug("HBase batch took {} ns.", nanos);
                     }
                     Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_STORE_HBASE_COMMITS, Sensision.EMPTY_LABELS, 1);
                     Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_STORE_HBASE_TIME_NANOS, Sensision.EMPTY_LABELS, nanos);
@@ -931,7 +931,7 @@ public class Store extends Thread {
                       long nanos = System.nanoTime();
                       if (!store.SKIP_WRITE) {
                         if (LOG.isDebugEnabled()) {
-                          LOG.debug("Forcing HBase batch of " + puts.size() + " Puts.");
+                          LOG.debug("Forcing HBase batch of {} Puts.", puts.size());
                         }
                         ht.batch(puts, results);
                         // Check results for nulls
@@ -948,7 +948,7 @@ public class Store extends Thread {
                       putsSize.set(0L);
                       nanos = System.nanoTime() - nanos;
                       if (LOG.isDebugEnabled()) {
-                        LOG.debug("Forced HBase batch took " + nanos + " ns");
+                        LOG.debug("Forced HBase batch took {} ns", nanos);
                       }
                       Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_STORE_HBASE_COMMITS, Sensision.EMPTY_LABELS, 1);
                       Sensision.update(SensisionConstants.SENSISION_CLASS_CONTINUUM_STORE_HBASE_TIME_NANOS, Sensision.EMPTY_LABELS, nanos);
@@ -975,7 +975,7 @@ public class Store extends Thread {
                       // If an exception is thrown, abort
                       store.abort.set(true);                      
                       resetHBase = true;
-                      LOG.error("Received Throwable while forced writing of " + puts.size() + " PUTs to HBase - forcing HBase reset");
+                      LOG.error("Received Throwable while forced writing of {} PUTs to HBase - forcing HBase reset", puts.size());
                       return;
                     }
                   }                  

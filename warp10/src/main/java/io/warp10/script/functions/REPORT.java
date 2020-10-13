@@ -64,7 +64,7 @@ public class REPORT extends NamedWarpScriptFunction implements WarpScriptStackFu
     SECRET = WarpConfig.getProperty(Configuration.WARP10_REPORT_SECRET, defaultSecret);
     
     if (defaultSecret.equals(SECRET)) {
-      LOG.info("REPORT secret not set, using '" + defaultSecret + "'.");
+      LOG.info("REPORT secret not set, using '{}'.", defaultSecret);
       System.out.println("REPORT secret not set, using '" + defaultSecret + "'.");
     }    
   }

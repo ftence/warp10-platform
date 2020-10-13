@@ -799,7 +799,7 @@ public class StandaloneStreamUpdateHandler extends WebSocketHandler.Simple {
         throw new RuntimeException("Data logging target '" + dir + "' is not a directory.");
       } else {
         loggingDir = dir;
-        LOG.info("Data logging enabled in directory '" + dir + "'.");
+        LOG.info("Data logging enabled in directory '{}'.", dir);
       }
       
       String id = properties.getProperty(Configuration.DATALOG_ID);

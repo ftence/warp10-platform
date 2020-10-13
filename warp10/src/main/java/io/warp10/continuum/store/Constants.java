@@ -487,7 +487,7 @@ public class Constants {
     MAX_ENCODER_SIZE = Integer.parseInt(WarpConfig.getProperty(Configuration.MAX_ENCODER_SIZE, Integer.toString(DEFAULT_MAX_ENCODER_SIZE)));
     
     if (null == System.getProperty(Configuration.WARP10_QUIET)) {
-      LOG.info("########[ Initialized with " + TIME_UNITS_PER_MS + " time units per millisecond ]########");
+      LOG.info("########[ Initialized with {} time units per millisecond ]########", TIME_UNITS_PER_MS);
     }
     
     //

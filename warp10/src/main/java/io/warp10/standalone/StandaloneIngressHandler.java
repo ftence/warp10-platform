@@ -218,7 +218,7 @@ public class StandaloneIngressHandler extends AbstractHandler {
         throw new RuntimeException("Data logging target '" + dir + "' is not a directory.");
       } else {
         loggingDir = dir;
-        LOG.info("Data logging enabled in directory '" + dir + "'.");
+        LOG.info("Data logging enabled in directory '{}'.", dir);
       }
       
       String id = WarpConfig.getProperty(Configuration.DATALOG_ID);

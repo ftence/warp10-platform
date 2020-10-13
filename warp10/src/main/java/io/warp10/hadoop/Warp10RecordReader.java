@@ -117,8 +117,7 @@ public class Warp10RecordReader extends RecordReader<Text, BytesWritable> implem
 
         URL url = new URL(sb.toString());
 
-        LOG.info("Fetcher: " + endpointSb.toString());
-
+        LOG.info("Fetcher: {}", endpointSb.toString());
         conn = (HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(connectTimeout);
         conn.setReadTimeout(readTimeout);

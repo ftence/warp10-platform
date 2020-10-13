@@ -245,7 +245,7 @@ public class StandaloneAcceleratedStoreClient implements StoreClient {
           }
         }
 
-        LOG.info("Preloaded accelerator with " + datapoints + " datapoints from " + this.cache.getGTSCount() + " Geo Time Series in " + ((System.nanoTime() - nanos) / 1000000.0D) + " ms.");
+        LOG.info("Preloaded accelerator with {} datapoints from {} Geo Time Series in {} ms.", datapoints, this.cache.getGTSCount(), (System.nanoTime() - nanos) / 1000000.0D);
       } catch (IOException ioe) {
         throw new RuntimeException("Error populating cache.", ioe);
       }      

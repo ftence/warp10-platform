@@ -49,10 +49,10 @@ public class StandaloneSnapshotManager extends Thread {
     // Check if any of the files already exists, if so emit a warning
     //
     if (new File(triggerPath).exists()) {
-      LOG.warn("Snapshot trigger file '" + triggerPath + "' exists at startup.");
+      LOG.warn("Snapshot trigger file '{}' exists at startup.", triggerPath);
     }
     if (new File(signalPath).exists()) {
-      LOG.warn("Snapshot signal file '" + signalPath + "' exists at startup.");
+      LOG.warn("Snapshot signal file '{}' exists at startup.", signalPath);
     }
   }
 
@@ -84,7 +84,7 @@ public class StandaloneSnapshotManager extends Thread {
         continue;
       }
 
-      LOG.info("Snapshot trigger file '" + triggerPath + "' detected, closing LevelDB.");
+      LOG.info("Snapshot trigger file '{}' detected, closing LevelDB.", triggerPath);
 
       final long nanos = System.nanoTime();
 
@@ -105,9 +105,9 @@ public class StandaloneSnapshotManager extends Thread {
             File signal = new File(signalPath);
 
             try {
-              LOG.info("Creating snapshot signal file '" + signalPath + "'.");
+              LOG.info("Creating snapshot signal file '{}'.", signalPath);
               signal.createNewFile();
-              LOG.info("Snapshot signal file '" + signalPath + "' created, waiting for trigger file '" + triggerPath + "' to disappear.");
+              LOG.info("Snapshot signal file '{}' created, waiting for trigger file '{}' to disappear.", signalPath, triggerPath);
             } catch (IOException ioe) {
               LOG.error("Error creating snapshot signal file '" + signalPath + "', waiting for trigger file '" + triggerPath + "' to disappear before re-opening LevelDB.", ioe);
             }
@@ -120,7 +120,7 @@ public class StandaloneSnapshotManager extends Thread {
               LockSupport.parkNanos(100000000L);
             }
 
-            LOG.info("Snapshot trigger file '" + triggerPath + "' disappeared, reopening LevelDB.");
+            LOG.info("Snapshot trigger file '{}' disappeared, reopening LevelDB.", triggerPath);
 
             //
             // Return so we re-open the DB
@@ -135,9 +135,9 @@ public class StandaloneSnapshotManager extends Thread {
             // Remove the signal file
             //
 
-            LOG.info("Deleting snapshot signal file '" + signalPath + "'.");
+            LOG.info("Deleting snapshot signal file '{}'.", signalPath);
             signal.delete();
-            LOG.info("Snapshot signal file '" + signalPath + "' deleted.");
+            LOG.info("Snapshot signal file '{}' deleted.", signalPath);
 
             return null;
           }
